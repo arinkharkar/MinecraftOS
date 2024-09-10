@@ -15,7 +15,7 @@ multiboot:
 .long 0,0,0,0,0
 .long 0
 /* Width, Height, Pixel Depth (32 bit is true color) */
-.long 1280, 720, 32
+.long 1920, 1080, 32
 
 /*
  * Create a 16 Kb stack, will later move %esp to stack top
@@ -38,16 +38,17 @@ critical_error_message:
 */
 .extern kernel_main
 _start:
+	cli
 	/*
 	 * Grub is nice and boots us into 32 bit mode however paging is disabled .
 	 */
 	movl $stack_top, %esp
-	
+	//GRUB gives us some values we can pass to C
 	push %eax
 	push %ebx
 	// Jump to C code here
 	call kernel_main
-	jmp ___kernel__printstr____
+	jmp error_printstr
 	cli
 1:	hlt
 	jmp 1b
@@ -56,9 +57,8 @@ _start:
 /*
  * In case the jump to C fails, use this to print 
  */
-___kernel__printstr____:
+error_printstr:
 	cli #disable interupts
-	movl $'A', %ecx
 	movl $critical_error_message, %eax
 	movl $0xb8000, %ebx
 

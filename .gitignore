@@ -1,0 +1,4 @@
+bin/*
+.vscode/*
+iso/boot/doomos.bin
+doomos.iso
