@@ -81,4 +81,5 @@ int init_idt();
 
 void irq_remap();
 
+void register_exceptions();
 #endif

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <io.h>
 #include <ps2keyboard.h>
+#include <ps2mouse.h>
 #include "pit.h"
 
 void register_interupt(int intNo, void(*function)());
@@ -21,7 +22,7 @@ int init_idt() {
     // zero out the idt
     memset(&idt[0], 0, sizeof(idt[0]) * 256);
     
-    pidt.base = &idt[0];
+    pidt.base = (uint32_t)&idt[0];
     pidt.limit = sizeof(idt[0]) * 256 - 1;
     idt_enable();
     irq_remap();
@@ -75,8 +76,11 @@ void interrupt_handler(exception_regs r) {
         if (r.int_no == 32) {
             pit_callback();
         }
-        if (r.int_no == 33 || r.int_no == 44) {
+        if (r.int_no == 33) {
             keycode_recv();
+        }
+        if (r.int_no == 44) {
+            mouse_recv();
         }
     }
 

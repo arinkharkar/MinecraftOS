@@ -1,5 +1,7 @@
 #include "pit.h"
 
+void main_loop();
+
 
 // 0 = Start at Jan 1 1970 00:00 UTC
 // THIS WILL STOP WORKING ON Tue Jan 19 2038 03:14:07 GMT+0000
@@ -10,18 +12,13 @@ void init_pit(int freq) {
     // We set the PIT to use a 16 bit counter and generate a square wave
     outb(0x43, 0b00110110);
     // send the lower 8 bits of the divisor
-    outb(0x40, freq & 0b11111111);
+    outb(0x40, div & 0b11111111);
     // send the higher 8 bits of the divisor
-    outb(0x40, freq >> 8);
-    
+    outb(0x40, (div >> 8) & 0b11111111);
 }
 
-int ticks = 0;
+uint32_t ticks = 0;
 
 void pit_callback() {
-    
     ticks++;
-    if (ticks % 1000 == 0)
-        print_str("called");
-    
 }

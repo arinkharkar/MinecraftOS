@@ -15,4 +15,9 @@ static void *memset(void *ptr, int value, size_t num) {
     return ptr;
 }
 
+static void * memcpy(void * restrict dest, const void * restrict src, size_t count) {
+	asm volatile ("cld; rep movsb" : "+c" (count), "+S" (src), "+D" (dest) :: "memory");
+	return dest;
+}
+
 #endif

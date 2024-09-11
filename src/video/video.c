@@ -8,8 +8,10 @@ uint32_t SCREEN_HEIGHT;
 // bits per pixel (color quality) of the screen
 uint32_t SCREEN_BPP;
 
-// pointer to video memory, do not draw to this, instead use plot_pixel
-uint32_t* video_memory;
+// pointer to video memory, do not draw to this, instead use plot_pixel, due to the hardcoded 1080p restriction, we cannot support higher resolutions
+uint32_t back_buffer[1920*1080];
+//uint32_t* back_buffer = (uint32_t*)1;
+uint32_t* front_buffer = (uint32_t*)1;
 
 typedef struct {
     int x;
@@ -31,7 +33,7 @@ int init_video(multiboot_info_t* multiboot_info) {
         return ERROR;
     }
     
-    video_memory = (uint32_t)multiboot_info->framebuffer_addr;
+    front_buffer = (uint32_t*)multiboot_info->framebuffer_addr;
     SCREEN_WIDTH = w;
     SCREEN_HEIGHT = h;
     SCREEN_BPP = bpp;
@@ -67,8 +69,12 @@ int plot_pixel(int x, int y, color col) {
         set_last_error("Error plotting pixel: x or y out of range");
         return ERROR;
     }
-    video_memory[y * SCREEN_WIDTH + x] = col;
+    back_buffer[y * SCREEN_WIDTH + x] = col;
     return SUCCESS;
+}
+
+void plot_pixel_f(int x, int y, color col) {
+    back_buffer[y * SCREEN_WIDTH + x] = col;
 }
 
 
@@ -128,5 +134,12 @@ int draw_char(char c) {
 void draw_vertical_line(int yAxis, int len, color col) {
     for (int i = 0; i < len; i++) {
         plot_pixel(i, yAxis, col);
+    }
+}
+
+void clear_screen() {
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
+        for (int j = 0; j < SCREEN_HEIGHT; j++)
+            back_buffer[i + j * SCREEN_WIDTH] = 0;
     }
 }

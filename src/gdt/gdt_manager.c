@@ -29,7 +29,7 @@ int init_gdt() {
     if(fill_gdt_segment(&gdt[2], 0x000, 0x000FFFFF, true, false, true) == ERROR)
         return ERROR;
     
-    pgdt.base = &gdt[0];
+    pgdt.base = (uint32_t)&gdt[0];
     pgdt.limit = sizeof(gdt[0]) * GDT_ENTRY_COUNT - 1;
     activate_gdt();
     return SUCCESS;
