@@ -11,7 +11,7 @@
 
 
 uint32_t vSz;
-
+void init_fpu();
 void game_loop();
 /*
  * Called by start.S, gets the multiboot header from GRUB plus the magic number to ensure everything went smoothly
@@ -41,7 +41,13 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     } else {
         print_str("Enabled Interupts!\n");
     }
-    init_pit(1000);
+    print_int((float)54.52 + (float)98.14 * SCREEN_HEIGHT);
+    init_fpu();
+    print_str("Resolution: ");
+    print_int(SCREEN_WIDTH);
+    print_str("x");
+    print_int(SCREEN_HEIGHT);
+   // init_pit(1000);
     memcpy(front_buffer, back_buffer, vSz);
     game_init();
 
@@ -52,6 +58,21 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
         game_loop();
 
         memcpy(front_buffer, back_buffer, vSz);
-        while((ticks % 17)) {}
     }
+}
+
+
+
+void init_fpu() {
+    size_t t;
+
+    asm("clts");
+    asm("mov %%cr0, %0" : "=r"(t));
+    t &= ~(1 << 2);
+    t |= (1 << 1);
+    asm("mov %0, %%cr0" :: "r"(t));
+    asm("mov %%cr4, %0" : "=r"(t));
+    t |= 3 << 9;
+    asm("mov %0, %%cr4" :: "r"(t));
+    asm("fninit");
 }

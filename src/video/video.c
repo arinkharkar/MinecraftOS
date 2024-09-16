@@ -34,11 +34,13 @@ int init_video(multiboot_info_t* multiboot_info) {
     }
     
     front_buffer = (uint32_t*)multiboot_info->framebuffer_addr;
+    //front_buffer = back_buffer;
     SCREEN_WIDTH = w;
     SCREEN_HEIGHT = h;
     SCREEN_BPP = bpp;
     current_cursos_pos.x = 0;
     current_cursos_pos.y = 0;
+
     draw_moving_img();
     return SUCCESS;
 }
