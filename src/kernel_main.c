@@ -3,6 +3,7 @@
 #include <gdt_manager.h>
 #include <idt.h>
 #include <game_main.h>
+#include <math.h>
 #include "pit.h"
 #include "multiboot.h"
 #include "ps2keyboard.h"
@@ -41,9 +42,8 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     } else {
         print_str("Enabled Interupts!\n");
     }
-    print_int((float)54.52 + (float)98.14 * SCREEN_HEIGHT);
     init_fpu();
-    print_str("Resolution: ");
+    print_str("\nResolution: ");
     print_int(SCREEN_WIDTH);
     print_str("x");
     print_int(SCREEN_HEIGHT);

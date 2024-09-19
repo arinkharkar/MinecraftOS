@@ -92,6 +92,7 @@ int print_str(const char* str) {
     return SUCCESS;
 }
 
+
 int print_int(int num) {
     char s[15];
     itoa(num, s, 10);
@@ -101,6 +102,22 @@ int print_int(int num) {
 int print_hex(int num) {
     char s[15];
     itoa(num, s, 16);
+    return print_str(s);
+}
+
+int print_float(float num) {
+    return print_floatd(num, 4);
+}
+
+int print_bool(bool b) {
+    if (b)
+        return print_str("True");
+    return print_str("False");
+}
+
+int print_floatd(float num, int digits) {
+    char s[25];
+    float_to_str(num, s, digits);
     return print_str(s);
 }
 

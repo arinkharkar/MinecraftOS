@@ -1,10 +1,10 @@
-CC=/home/arin/opt/cross/bin/i686-elf-gcc
-CXX=/home/arin/opt/cross/bin/i686-elf-g++
-ASM=/home/arin/opt/cross/bin/i686-elf-as
-LD=/home/arin/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
+CC=/usr/local/opt/cross/bin/i686-elf-gcc
+CXX=/usr/local/opt/cross/bin/i686-elf-g++
+ASM=/usr/local/opt/cross/bin/i686-elf-as
+LD=/usr/local/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
 GRUB=grub-mkrescue
-CFLAGS=-ffreestanding -m32 -fno-pie -mno-80387 -mno-mmx -mno-sse -mno-avx -fno-builtin -mno-red-zone -mgeneral-regs-only -fno-exceptions -I src -I src/video -I src/video/character_data -I src/gdt -I src/libc -I src/idt -I src/ps2 -I src/game
-XORRISO=/home/arin/Downloads/xorriso-1.5.6/xorriso/xorriso
+CFLAGS=-ffreestanding -m32 -fno-pie -fno-builtin -mno-red-zone -fno-exceptions -I src -I src/video -I src/video/character_data -I src/gdt -I src/libc -I src/idt -I src/ps2 -I src/game
+XORRISO=/home/kalix/download/xorriso-1.4.6/xorriso/xorriso
 LDFLAGS=-T"link.ld" -ffreestanding -nostdlib -lgcc
 BIN=bin
 ISO=iso
@@ -19,6 +19,9 @@ $(BIN):
 
 $(BIN)/start.o: $(BIN) $(SRC)/start.S
 	$(ASM) $(SRC)/start.S -o $(BIN)/start.o
+
+$(BIN)/floatarith.o: $(BIN) $(SRC)/libc/floatarith.S
+	$(ASM) $(SRC)/libc/floatarith.S -o $(BIN)/floatarith.o
 
 $(BIN)/kernel_main.o: $(BIN) $(SRC)/kernel_main.c
 	$(CC) $(CFLAGS) -c $(SRC)/kernel_main.c -o $(BIN)/kernel_main.o
@@ -62,8 +65,8 @@ $(BIN)/ps2mouse.o: $(BIN) $(SRC)/ps2/ps2mouse.c
 $(BIN)/isr.o: $(BIN) $(SRC)/idt/isr.S
 	$(ASM) $(SRC)/idt/isr.S -o $(BIN)/isr.o
 
-$(BIN)/doomos.bin: $(BIN)/start.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/video.o $(BIN)/gdt_enabler.o $(BIN)/isr.o $(BIN)/gdt_manager.o $(BIN)/idt_enabler.o $(BIN)/idt.o
-	$(LD) $(LDFLAGS) $(BIN)/start.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/gdt_enabler.o $(BIN)/gdt_manager.o $(BIN)/isr.o $(BIN)/video.o $(BIN)/idt.o $(BIN)/idt_enabler.o -o $(BIN)/doomos.bin 
+$(BIN)/doomos.bin: $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/video.o $(BIN)/gdt_enabler.o $(BIN)/isr.o $(BIN)/gdt_manager.o $(BIN)/idt_enabler.o $(BIN)/idt.o
+	$(LD) $(LDFLAGS) $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/gdt_enabler.o $(BIN)/gdt_manager.o $(BIN)/isr.o $(BIN)/video.o $(BIN)/idt.o $(BIN)/idt_enabler.o -o $(BIN)/doomos.bin 
 	
 $(ISO)/boot/doomos.bin: $(BIN)/doomos.bin $(ISO)/boot
 	cp $(BIN)/doomos.bin $(ISO)/boot/doomos.bin

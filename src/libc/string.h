@@ -45,4 +45,14 @@ static void* memcpy(void* dest, const void* src, size_t n) {
     return dest;
 }
 
+
+static size_t strlen(char* s) {
+    size_t sz = 0;
+    while (*s) {
+        s++;
+        sz++;
+    }
+    return sz;
+}
+
 #endif

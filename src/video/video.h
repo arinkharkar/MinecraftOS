@@ -46,6 +46,12 @@ int print_int(int num);
 
 int print_hex(int num);
 
+int print_float(float num);
+
+int print_floatd(float num, int digits);
+
+int print_bool(bool b);
+
 void draw_moving_img();
 
 void draw_vertical_line(int yAxis, int len, color col);
