@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <video.h>
+#include <math.h>
 #include <gdt_manager.h>
 #include <idt.h>
 #include <game_main.h>

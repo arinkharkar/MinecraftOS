@@ -49,6 +49,7 @@ _start:
 	// Jump to C code here
 	call kernel_main
 	jmp error_printstr
+
 	cli
 1:	hlt
 	jmp 1b

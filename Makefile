@@ -1,10 +1,10 @@
-CC=/usr/local/opt/cross/bin/i686-elf-gcc
-CXX=/usr/local/opt/cross/bin/i686-elf-g++
-ASM=/usr/local/opt/cross/bin/i686-elf-as
-LD=/usr/local/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
+CC=$(HOME)/opt/cross/bin/i686-elf-gcc
+CXX=$(HOME)/opt/cross/bin/i686-elf-g++
+ASM=$(HOME)/opt/cross/bin/i686-elf-as
+LD=$(HOME)/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
 GRUB=grub-mkrescue
 CFLAGS=-ffreestanding -m32 -fno-pie -fno-builtin -mno-red-zone -fno-exceptions -I src -I src/video -I src/video/character_data -I src/gdt -I src/libc -I src/idt -I src/ps2 -I src/game
-XORRISO=/home/kalix/download/xorriso-1.4.6/xorriso/xorriso
+XORRISO=/src/xorriso-1.5.6/xorriso/xorriso
 LDFLAGS=-T"link.ld" -ffreestanding -nostdlib -lgcc
 BIN=bin
 ISO=iso
@@ -22,6 +22,9 @@ $(BIN)/start.o: $(BIN) $(SRC)/start.S
 
 $(BIN)/floatarith.o: $(BIN) $(SRC)/libc/floatarith.S
 	$(ASM) $(SRC)/libc/floatarith.S -o $(BIN)/floatarith.o
+
+$(BIN)/math.o: $(BIN) $(SRC)/libc/math.c
+	$(CC) $(CFLAGS) -c $(SRC)/libc/math.c -o $(BIN)/math.o
 
 $(BIN)/kernel_main.o: $(BIN) $(SRC)/kernel_main.c
 	$(CC) $(CFLAGS) -c $(SRC)/kernel_main.c -o $(BIN)/kernel_main.o
