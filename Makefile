@@ -1,7 +1,7 @@
-CC=$(HOME)/opt/cross/bin/i686-elf-gcc
-CXX=$(HOME)/opt/cross/bin/i686-elf-g++
-ASM=$(HOME)/opt/cross/bin/i686-elf-as
-LD=$(HOME)/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
+CC=/usr/local/opt/cross/bin/i686-elf-gcc
+CXX=/usr/local/opt/cross/bin/i686-elf-g++
+ASM=/usr/local/opt/cross/bin/i686-elf-as
+LD=/usr/local/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
 GRUB=grub-mkrescue
 CFLAGS=-ffreestanding -m32 -fno-pie -fno-builtin -mno-red-zone -fno-exceptions -I src -I src/video -I src/video/character_data -I src/gdt -I src/libc -I src/idt -I src/ps2 -I src/game
 XORRISO=/src/xorriso-1.5.6/xorriso/xorriso
