@@ -5,9 +5,10 @@
 
 #define INFINITY (1.0/0.0)
 
+#define M_PI ((float)3.1415926535)
 #define PI ((float)3.1415926535)
 
-#define EulersNumber 2.71
+#define EulersNumber ((float)2.7182818)
 
 float pow(float base, float exp);
 

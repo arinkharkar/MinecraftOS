@@ -1,6 +1,7 @@
 #ifndef __VIDEO__H__
 #define __VIDEO__H__
 #include <stdint.h>
+#include <stdbool.h>
 #include <doomOS_types.h>
 #include <eightdata.h>
 #include <error_handler.h>
@@ -44,11 +45,22 @@ int print_str(const char* str);
 
 int print_int(int num);
 
+int print_ch(const char c);
+
 int print_hex(int num);
 
 int print_float(float num);
 
 int print_floatd(float num, int digits);
+
+int print_float_inplace(float num, int x, int y);
+
+int print_int_inplace(int num, int x, int y);
+
+int print_str_inplace(const char* str, int x, int y);
+
+int print_bool_inplace(bool b, int x, int y);
+
 
 int print_bool(bool b);
 

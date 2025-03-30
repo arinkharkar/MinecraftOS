@@ -5,6 +5,7 @@ void main_loop();
 
 // 0 = Start at Jan 1 1970 00:00 UTC
 // THIS WILL STOP WORKING ON Tue Jan 19 2038 03:14:07 GMT+0000
+// Getting pretty close to it cant lie :DD
 int32_t epoch_timestamp = 0;
 
 void init_pit(int freq) {

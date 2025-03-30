@@ -8,8 +8,12 @@
 #include "pit.h"
 
 void register_interupt(int intNo, void(*function)());
-void interrupt_handler();
-void idt_enable();
+extern "C" void idt_enable();
+
+#ifndef __STD_LIB_H_
+static char* itoa(int value, char* str, int base);
+static char* float_to_str(float num, char* str, int precision);
+#endif
 
 extern void* isr_table[]; 
 
@@ -34,7 +38,7 @@ int init_idt() {
 // in the idt, set the first 32 values to point to each exception handler
 void register_exceptions() {
     for (int i = 0; i < 48; i++) {
-        register_interupt(i, isr_table[i]);
+        register_interupt(i, (void(*)())isr_table[i]);
     }
 }
 
@@ -62,10 +66,10 @@ void irq_remap()
 }
 
 
-void interrupt_handler(exception_regs r) {
+extern "C" void interrupt_handler(exception_regs r) {
     // If the interupt is an exception
     if (r.int_no < 32) {
-        print_str("CRITICAL EXCEPTION OCCURED, DoomOS has terminated: ");
+        print_str("CRITICAL EXCEPTION OCCURED, MinecraftOS has terminated: ");
         print_str(exception_messages[r.int_no]);
         print_str("\nException Number: ");
         char s_int_no[15];

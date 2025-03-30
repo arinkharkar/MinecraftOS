@@ -9,6 +9,7 @@
 #include "multiboot.h"
 #include "ps2keyboard.h"
 #include <string.h>
+#include <matrix.h>
 
 
 
@@ -18,7 +19,7 @@ void game_loop();
 /*
  * Called by start.S, gets the multiboot header from GRUB plus the magic number to ensure everything went smoothly
 */
-void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
+extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     if (init_video(mbd) == ERROR) {
         // Cant print a message as the video hasnt been inited
         while(1) {}
@@ -48,11 +49,34 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     print_int(SCREEN_WIDTH);
     print_str("x");
     print_int(SCREEN_HEIGHT);
-   // init_pit(1000);
+    print_str("\n");
+    init_pit(1000);
+
+/*
+    matrix m1 = matrix(4, 4);
+    m1[0][0] = 3;
+    m1[0][1] = 5.12;
+    m1[1][1] = 4;
+    m1[3][1] = 1.52;
+    m1[2][2] = 2.01;
+
+    matrix m2 = matrix(4, 4);
+    m2[0][0] = 1;
+    m2[1][1] = 1;
+    m2[2][2] = 1;
+    m2[3][3] = 1;
+
+    matrix m3 = m1 * m2;
+    m1.print();
+    m3.print();*/
+
+    
     memcpy(front_buffer, back_buffer, vSz);
     game_init();
 
     memcpy(front_buffer, back_buffer, vSz);
+
+
 
     while (1) {
         memset(back_buffer, 0x0, vSz);

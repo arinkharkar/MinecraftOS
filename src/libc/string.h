@@ -5,10 +5,10 @@
 #include <stddef.h>
 
 static void *memset(void *ptr, int value, size_t num) {
-    unsigned char *p = (unsigned char *)ptr;
-    unsigned char val = (unsigned char)value;
+    size_t *p = (size_t*)ptr;
+    uint8_t val = (uint8_t)value;
 
-    for (size_t i = 0; i < num; i++) {
+    for (size_t i = 0; i < num / sizeof(size_t); i++) {
         p[i] = val;
     }
 

@@ -1,5 +1,9 @@
 #include "video.h" 
 
+#ifndef __STD_LIB_H_
+static char* itoa(int value, char* str, int base);
+static char* float_to_str(float num, char* str, int precision);
+#endif
 
 // height of the screen
 uint32_t SCREEN_WIDTH;
@@ -81,7 +85,7 @@ void plot_pixel_f(int x, int y, color col) {
 
 
 int print_str(const char* str) {
-    char* _str = str;
+    char* _str = (char*)str;
     while (*_str != '\0') {
         if (draw_char(*_str) == ERROR) {
             set_last_error("Error printing");
@@ -92,6 +96,9 @@ int print_str(const char* str) {
     return SUCCESS;
 }
 
+int print_ch(const char c) {
+    return draw_char(c);
+}
 
 int print_int(int num) {
     char s[15];
@@ -119,6 +126,46 @@ int print_floatd(float num, int digits) {
     char s[25];
     float_to_str(num, s, digits);
     return print_str(s);
+}
+
+int print_float_inplace(float num, int x, int y) {
+    // save the cursor position so that we can set the cursor back here after we are done printing
+    cursor_pos old_cursor_pos = current_cursos_pos;
+    current_cursos_pos.x = x;
+    current_cursos_pos.y = y;
+    int rVal = print_floatd(num, 4);
+    current_cursos_pos = old_cursor_pos;
+    return rVal;
+}
+
+int print_int_inplace(int num, int x, int y) {
+    // save the cursor position so that we can set the cursor back here after we are done printing
+    cursor_pos old_cursor_pos = current_cursos_pos;
+    current_cursos_pos.x = x;
+    current_cursos_pos.y = y;
+    int rVal = print_int(num);
+    current_cursos_pos = old_cursor_pos;
+    return rVal;
+}
+
+int print_str_inplace(const char* str, int x, int y) {
+    // save the cursor position so that we can set the cursor back here after we are done printing
+    cursor_pos old_cursor_pos = current_cursos_pos;
+    current_cursos_pos.x = x;
+    current_cursos_pos.y = y;
+    int rVal = print_str(str);
+    current_cursos_pos = old_cursor_pos;
+    return rVal;
+}
+
+int print_bool_inplace(bool b, int x, int y) {
+    // save the cursor position so that we can set the cursor back here after we are done printing
+    cursor_pos old_cursor_pos = current_cursos_pos;
+    current_cursos_pos.x = x;
+    current_cursos_pos.y = y;
+    int rVal = print_bool(b);
+    current_cursos_pos = old_cursor_pos;
+    return rVal;
 }
 
 

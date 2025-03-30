@@ -114,5 +114,23 @@ static char* float_to_str(float num, char* str, int precision) {
     return str;
 }
 
+static inline int abs(int num) {
+    if (num < 0)
+        return -num;
+    return num;
+}
+
+static inline float fabs(float num) {
+    if (num < 0)
+        return -num;
+    return num;
+}
+
+
+
+// Defined in memory.cpp
+void* malloc(size_t size);
+
+void* calloc(size_t num, size_t size);
 
 #endif
