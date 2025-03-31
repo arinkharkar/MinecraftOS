@@ -59,6 +59,9 @@ $(BIN)/ps2mouse.o: $(BIN) $(SRC)/ps2/ps2mouse.cpp
 $(BIN)/game_main.o: $(BIN) $(SRC)/game/game_main.cpp
 	$(CXX) $(CFLAGS) -c $(SRC)/game/game_main.cpp -o $(BIN)/game_main.o
 
+$(BIN)/projection.o: $(BIN) $(SRC)/game/projection.cpp
+	$(CXX) $(CFLAGS) -c $(SRC)/game/projection.cpp -o $(BIN)/projection.o
+
 $(BIN)/draw.o: $(BIN) $(SRC)/game/draw.cpp
 	$(CC) $(CFLAGS) -c $(SRC)/game/draw.cpp -o $(BIN)/draw.o
 
@@ -74,8 +77,8 @@ $(BIN)/memory.o: $(BIN) $(SRC)/memory.cpp
 $(BIN)/isr.o: $(BIN) $(SRC)/idt/isr.S
 	$(ASM) $(SRC)/idt/isr.S -o $(BIN)/isr.o
 
-$(BIN)/doomos.bin: $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/video.o $(BIN)/gdt_enabler.o $(BIN)/isr.o $(BIN)/gdt_manager.o $(BIN)/idt_enabler.o $(BIN)/idt.o $(BIN)/matrix.o $(BIN)/memory.o
-	$(LD) $(LDFLAGS) $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/gdt_enabler.o $(BIN)/gdt_manager.o $(BIN)/isr.o $(BIN)/video.o $(BIN)/idt.o $(BIN)/matrix.o $(BIN)/memory.o $(BIN)/idt_enabler.o -o $(BIN)/doomos.bin 
+$(BIN)/doomos.bin: $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/projection.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/video.o $(BIN)/gdt_enabler.o $(BIN)/isr.o $(BIN)/gdt_manager.o $(BIN)/idt_enabler.o $(BIN)/idt.o $(BIN)/matrix.o $(BIN)/memory.o
+	$(LD) $(LDFLAGS) $(BIN)/start.o $(BIN)/floatarith.o $(BIN)/math.o $(BIN)/projection.o $(BIN)/kernel_main.o $(BIN)/ps2mouse.o $(BIN)/draw.o $(BIN)/game_main.o $(BIN)/ps2keyboard.o $(BIN)/pit.o $(BIN)/error_handler.o $(BIN)/gdt_enabler.o $(BIN)/gdt_manager.o $(BIN)/isr.o $(BIN)/video.o $(BIN)/idt.o $(BIN)/matrix.o $(BIN)/memory.o $(BIN)/idt_enabler.o -o $(BIN)/doomos.bin 
 	
 $(ISO)/boot/doomos.bin: $(BIN)/doomos.bin $(ISO)/boot
 	cp $(BIN)/doomos.bin $(ISO)/boot/doomos.bin

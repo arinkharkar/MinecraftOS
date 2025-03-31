@@ -52,25 +52,7 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     print_str("\n");
     init_pit(1000);
 
-/*
-    matrix m1 = matrix(4, 4);
-    m1[0][0] = 3;
-    m1[0][1] = 5.12;
-    m1[1][1] = 4;
-    m1[3][1] = 1.52;
-    m1[2][2] = 2.01;
-
-    matrix m2 = matrix(4, 4);
-    m2[0][0] = 1;
-    m2[1][1] = 1;
-    m2[2][2] = 1;
-    m2[3][3] = 1;
-
-    matrix m3 = m1 * m2;
-    m1.print();
-    m3.print();*/
-
-    
+    print_float(sin(8 * M_PI + 0.51));
     memcpy(front_buffer, back_buffer, vSz);
     game_init();
 

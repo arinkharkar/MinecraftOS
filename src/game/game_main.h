@@ -5,12 +5,6 @@ void game_init();
 
 void game_loop();
 
-typedef struct {
-    float x;
-    float y;
-    float z;
-} vector3;
-
 enum line_direction { xDir, yDir, zDir };
 
 void draw_line_f(float x1, float y1, float z1, float len , int dir) ;

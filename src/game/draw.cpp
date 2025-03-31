@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "draw.h"
 
 
@@ -12,64 +13,18 @@ void draw_square(int x1, int y1, int x2, int y2, color col) {
 }
 
 
-void draw_line(int x1, int y1, int x2, int y2, color col) {
-    // essentially, are the coords in bounds
-   // if (x1 < 0 || x1 > SCREEN_WIDTH || y1 < 0 || y1 > SCREEN_HEIGHT || x2 < 0 || x2 > SCREEN_WIDTH || y2 < 0 || y2 > SCREEN_HEIGHT)
-     //   return;
-    float curX = x1;
-    float curY = y1;
-    float slope = fabs(((float)y2-y1)/((float)x2-x1));
-    bool modifyY = true;
-    if (slope < 1) {
-        modifyY = false;
-        slope = 1/slope;
-    }
+void draw_line(int x0, int y0, int x1, int y1, color col) {
+// Uses Bresenham's line algorithm from https://gist.github.com/bert/1085538 to draw a line between 2 points
+    int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
+    int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
+    int err = dx + dy, e2; /* error value e_xy */
     
-    if (curX == x2) {
-        while (curY != y2) {
-            plot_pixel((int)curX, (int)curY, col);
-            curY++;
-        }
-        return;
+    for (;;){  /* loop */
+        plot_pixel (x0,y0, col);
+        if (x0 == x1 && y0 == y1) break;
+        e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+        if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
     }
-
-    if (curY == y2) {
-        while (curX != x2) {
-            plot_pixel((int)curX, (int)curY, col);
-            curX++;
-        }
-        return;
-    }
-
-    // Make sure we dont loop unreasonably for some reason
-    #define __MAX_SAFETY_COUNT__ 10000
-    int safetyCounter = 0;
-    while (curX != x2 && curY != y2) {
-        plot_pixel((int)curX, (int)curY, col);
-        if (modifyY) {
-            curX++;
-            float current_curY = curY;
-            // go through and plot each pixel
-            while (curY != current_curY + slope) {
-                plot_pixel((int)curX, (int)curY, col);
-                curY++;
-            }
-        } else {
-            curY++;
-            float current_curX = curX;
-            // go through and plot each pixel
-            int safetyCounter1 = 0;
-            while (curX != current_curX + slope) {
-                if (safetyCounter1 > __MAX_SAFETY_COUNT__)
-                    break;
-                plot_pixel((int)curX, (int)curY, col);
-                curX++;
-                safetyCounter1++;
-            }
-        }
-        if (safetyCounter > __MAX_SAFETY_COUNT__)
-            break;
-        safetyCounter++;
-    } 
 
 }

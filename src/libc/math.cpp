@@ -13,7 +13,7 @@ float sin(float angle) {
 }
 
 float cos(float angle) {
-    return sin(angle - PI/2);
+    return sin(angle + PI/2);
 }
 
 float tan(float angle) {
