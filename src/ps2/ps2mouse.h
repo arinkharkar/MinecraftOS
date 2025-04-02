@@ -9,5 +9,6 @@ void mouse_recv();
 
 void draw_cursor();
 
+int init_ps2_mouse();
 
 #endif

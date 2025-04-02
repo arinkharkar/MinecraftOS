@@ -1,6 +1,7 @@
-#include "ps2mouse.h"
 #include <video.h>
 #include <draw.h>
+#include "ps2_helper.h"
+#include "ps2mouse.h"
 #include "cursor.h"
 
 int mCoordx = 500;
@@ -8,12 +9,55 @@ int mCoordy = 500;
 int lmCoordx = 500;
 int lmCoordy = 500;
 
+int init_ps2_mouse() {
+    // Set the deafult settings of the mouse
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_DEVICE_SET_DEFAULTS);
+    ps2_controller_waittoread();  
+    byte c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return ERROR;
+
+    // Enable keyboard scanning
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_DEVICE_ENABLE_SCANNING);
+    ps2_controller_waittoread();  
+    c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return ERROR;
+
+    const int sample_rate = 200;
+    // Enable keyboard scanning
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_MOUSE_SET_SAMPLE_RATE);
+    ps2_controller_waittoread();  
+    c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return ERROR;
+    ps2_controller_waittowrite();
+    write_to_mouse(sample_rate);
+    ps2_controller_waittoread();  
+    c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return ERROR;
+
+    return SUCCESS;   
+}
+
+extern int sec;
 void mouse_recv() {
-    uint8_t b1 = inb(0x60);
-    uint8_t xMov = inb(0x60);
-    uint8_t yMov = inb(0x60);
-    if (b1 & 0b11000000)
+    uint8_t b1 = recv_from_mouse();
+    uint8_t xMov = recv_from_mouse();
+    uint8_t yMov = recv_from_mouse();
+    if (b1 & 0b11000000) {
+        print_int_inplace(sec, 230, 600);
         return;
+    }
+
+    if (!(b1 & 0b00001000)) {
+        print_str_inplace("ERROR BYTE", 230, 600);
+        return;
+    }
     uint8_t state = b1;
 	uint8_t d = xMov;
 	int rel_x = d - ((state << 4) & 0x100);
@@ -25,8 +69,8 @@ void mouse_recv() {
     if (mCoordy - rel_y >= SCREEN_HEIGHT || mCoordy - rel_y <= 0) {}
     else
         mCoordy -= rel_y;
-    print_str("mouse_recv()");
-    swap();
+ //   print_str("mouse_recv()");
+   // swap();
 }
 
 

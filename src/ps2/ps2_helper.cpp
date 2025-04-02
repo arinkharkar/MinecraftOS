@@ -6,6 +6,12 @@
 #include "io.h"
 
 
+// These will be used by the keyboard and mouse drivers
+void(*write_to_keyboard)(byte data);
+void(*write_to_mouse)(byte data);
+byte(*recv_from_keyboard)();
+byte(*recv_from_mouse)();
+
 
 bool test_ps2controller() {
     ps2_controller_waittowrite();
@@ -47,6 +53,7 @@ int test_ps2ports(bool secondPortExists) {
             return ERROR;
         }
     }
+    return SUCCESS;
 }
 
 int enable_ps2ports(bool isSecondChannel) {
@@ -186,9 +193,133 @@ void ps2_controller_waittoread() {
     }
 }
 
-void writetosecondps2port(byte data) {
+
+int ps2_identify_first_device(ps2_device_types* dvce_type) {
+    // in case anything goes wrong, return with device_type being set to error
+    *dvce_type = PS2_ERROR_TYPE;
+    // first disable scanning so that nothing interferes
+    ps2_controller_waittowrite();
+    ps2_write_to_firstport(PS2_DEVICE_DISABLE_SCANNING);
+    ps2_controller_waittoread();  
+    byte c = ps2_read_from_dataport();
+    if (c != PS2_ACK)
+        return ERROR;
+
+
+    ps2_write_to_firstport(PS2_DEVICE_IDENTIFY);
+    ps2_controller_waittoread();  
+    c = ps2_read_from_dataport();
+    if (c != PS2_ACK)
+        return ERROR;
+
+    byte b1, b2;
+    ps2_controller_waittoread(); 
+    b1 = ps2_read_from_dataport();
+    // A second byte is only given if the ps2 device is a keyboard, shown by b1 being PS2_KEYBD_GENERAL
+    if (b1 == PS2_KEYBD_GENERAL) {
+        ps2_controller_waittoread(); 
+        b2 = ps2_read_from_dataport();
+        *dvce_type = (ps2_device_types)b2;
+    } else {
+        *dvce_type = (ps2_device_types)b1;
+    }
+
+    return SUCCESS;
+}
+
+int ps2_identify_second_device(ps2_device_types* dvce_type) {
+    // in case anything goes wrong, return with device_type being set to error
+    *dvce_type = PS2_ERROR_TYPE;
+    // first disable scanning so that nothing interferes
+    ps2_controller_waittowrite();
+    ps2_write_to_secondport(PS2_DEVICE_DISABLE_SCANNING);
+    ps2_controller_waittoread();  
+    byte c = ps2_read_from_dataport();
+    if (c != PS2_ACK)
+        return ERROR;
+
+
+    ps2_write_to_secondport(PS2_DEVICE_IDENTIFY);
+    ps2_controller_waittoread();  
+    c = ps2_read_from_dataport();
+    if (c != PS2_ACK)
+        return ERROR;
+
+    byte b1, b2;
+    ps2_controller_waittoread(); 
+    b1 = ps2_read_from_dataport();
+    // A second byte is only given if the ps2 device is a keyboard, shown by b1 being PS2_KEYBD_GENERAL
+    if (b1 == PS2_KEYBD_GENERAL) {
+        ps2_controller_waittoread(); 
+        b2 = ps2_read_from_dataport();
+        *dvce_type = (ps2_device_types)b2;
+    } else {
+        *dvce_type = (ps2_device_types)b1;
+    }
+
+
+
+    return SUCCESS;
+}
+
+int init_ps2controller() {
+
+    // Enable the second ps2 port (technically we should check if there are 2 but every pc since like 1990 supports two so it should be fine)
+    ps2_controller_waittowrite();
+    ps2_write_to_commandport(PS2_ENABLE_SECOND_PORT);
+
+    // get and modify the ps2 controller byte
+    byte c = get_ps2_controllerconfig_byte();
+    c |= 0b11;
+    set_ps2_controllerconfig_byte(c);
+
+    ps2_controller_waittowrite();
+    // Disable scanning of the first ps2 device
+    ps2_write_to_firstport(PS2_DEVICE_DISABLE_SCANNING);
+    ps2_controller_waittoread();  
+    c = ps2_read_from_dataport();
+    print_hex(c);
+    if (c != PS2_ACK)
+        return ERROR;
+
+
+    ps2_device_types type1, type2;
+    if (ps2_identify_first_device(&type1) == ERROR)
+        return ERROR;
+    if (ps2_identify_second_device(&type2) == ERROR)
+        return ERROR;
+  
+    // if the first device is a mouse, set the proper write and read functions for the mouse
+    if (type1 == PS2_MOUSE || type1 == PS2_5BTN_MOUSE || type1 == PS2_MOUSE_SCROLL_WHL) {
+        write_to_mouse = ps2_write_to_firstport;
+        recv_from_mouse = ps2_read_from_dataport;
+      // There are more types of keyboards, shouldnt run into them though
+    } else if (type1 == PS2122_KYBD || type1 == PS2_KEYBD || type1 == PS2_97_KYBD || type1 == PS2_SHORT_KYBD) {
+        write_to_keyboard = ps2_write_to_firstport;
+        recv_from_keyboard = ps2_read_from_dataport;
+    }
+
+    if (type2 == PS2_MOUSE || type2 == PS2_5BTN_MOUSE || type2 == PS2_MOUSE_SCROLL_WHL) {
+        print_str("He");
+        write_to_mouse = ps2_write_to_secondport;
+        recv_from_mouse = ps2_read_from_dataport;
+      // There are more types of keyboards, shouldnt run into them though
+    } else if (type2 == PS2122_KYBD || type2 == PS2_KEYBD || type2 == PS2_97_KYBD || type2 == PS2_SHORT_KYBD) {
+        write_to_keyboard = ps2_write_to_secondport;
+        recv_from_keyboard = ps2_read_from_dataport;
+    }
+    
+    return SUCCESS;
+}
+
+void ps2_write_to_secondport(byte data) {
     while((inb(PS2_STATUS_PORT) & 2)) {}
     outb(PS2_STATUS_PORT, 0xD4);
+    while((inb(PS2_STATUS_PORT) & 2)) {}
+    outb(PS2_DATA_PORT, data);
+}
+
+void ps2_write_to_firstport(byte data) {
     while((inb(PS2_STATUS_PORT) & 2)) {}
     outb(PS2_DATA_PORT, data);
 }

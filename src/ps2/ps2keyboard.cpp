@@ -14,101 +14,22 @@ void(*keyup_callbacks[128])(key_state_t key);
 
 
 int init_ps2keyboard() {
-/*
-    // Disable the ps/2 devices while we set up everything
-    disable_ps2_devices();
-    
-    // Flush any extra data in the data buffer
-    inb(PS2_DATA_PORT);
-    
-
-    // Set the Controller Config Byte
-    byte c = get_ps2_controllerconfig_byte();
-    c = 0b00000100;
-    swap();
-    // Set the PS/2 Controller Config Byte
-    if (set_ps2_controllerconfig_byte(c) == ERROR)
-        return ERROR;
-        
-    // Making sure the PS/2 Controller works
-    if (test_ps2controller() == ERROR)
-        return ERROR;
-
-        
-    bool isSecondChannel = false;
-    if (ps2_enable_second_channel()) {
-        print_str("Second Channel Exists!");
-        isSecondChannel = true;
-    } else
-        print_str("Second Channel Not Found!");
-
-    test_ps2ports(isSecondChannel);
-
-        // Enable the first PS/2 Port
-    if (enable_ps2ports(isSecondChannel) == ERROR)
-        return ERROR;
-        
-    if (ps2_reset_devices() == ERROR)
-        return ERROR;
-    
-    c = get_ps2_controllerconfig_byte();
-    c = 0b00110100;
-    if (isSecondChannel)
-        c |= 0b00000011;
-    else
-        c |= 0b00000001;
-    // Set the PS/2 Controller Config Byte
-    if (set_ps2_controllerconfig_byte(c) == ERROR)
-        return ERROR;
-
-    print_str("HEREHEHRR\n");
-
-    ps2_controller_waittowrite();;
-    ps2_write_to_dataport(0xF4);
-    ps2_controller_waittoread();
-    print_str("\nScancode1: ");
-    print_hex(ps2_read_from_dataport());
-    print_ch('\n');
-
-    //ps2_controller_waittoread();
-    if (/*isSecondChanneltrue) {
-        writetosecondps2port(0xF4);
-
-        print_str("\nScancode2: ");
-        ps2_controller_waittoread();
-        print_hex(ps2_read_from_dataport());
-        print_ch('\n');
-    }
-    
-
-    
-    return SUCCESS;
-*/
-    // Enable the second ps2 port (technically we should check if there are 2 but every pc since like 1990 supports two soo)
+    // Set the deafult settings of the keyboard
     ps2_controller_waittowrite();
-    ps2_write_to_commandport(PS2_ENABLE_SECOND_PORT);
-
-    // get and modify the ps2 controller byte
-    byte c = get_ps2_controllerconfig_byte();
-    c |= 0b11;
-    set_ps2_controllerconfig_byte(c);
-
-    writetosecondps2port(PS2_DEVICE_SET_DEFAULTS);
-
+    write_to_keyboard(PS2_DEVICE_SET_DEFAULTS);
     ps2_controller_waittoread();  
-    c = ps2_read_from_dataport();
-    print_str("HEX: ");
-    print_hex(c);
+    byte c = recv_from_keyboard();
+    if (c != PS2_ACK)
+        return ERROR;
 
-    writetosecondps2port(PS2_DEVICE_ENABLE_SCANNING);
-    
+    // Enable keyboard scanning
+    ps2_controller_waittowrite();
+    write_to_keyboard(PS2_DEVICE_ENABLE_SCANNING);
     ps2_controller_waittoread();  
-    c = ps2_read_from_dataport();
-print_str("HEX: ");
-    print_hex(c);
+    c = recv_from_keyboard();
+    if (c != PS2_ACK)
+        return ERROR;
     
-    
-    // Not needed anymore
     return SUCCESS;
 }
 

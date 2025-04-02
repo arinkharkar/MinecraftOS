@@ -8,6 +8,7 @@
 #include "pit.h"
 #include "multiboot.h"
 #include "ps2keyboard.h"
+#include "ps2_helper.h"
 #include "ps2mouse.h"
 #include <string.h>
 #include <matrix.h>
@@ -41,10 +42,18 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     } else {
         print_str("Enabled GDT!\n");
     }
+    if (init_ps2controller() == ERROR) {
+        print_str("Error with PS/2 Controller\n");
+    }
     if (init_ps2keyboard() == ERROR) {
         print_str("Error with keyboard\n");
     } else {
         print_str("Enabled Keyboard\n");
+    }
+    if (init_ps2_mouse() == ERROR) {
+        print_str("Error with mouse\n");
+    } else {
+        print_str("Enabled Mouse\n");
     }
     if (init_idt() == ERROR) {
         print_str("Error Enabling IDT\n");
@@ -62,8 +71,8 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     init_pit(1000);
     print_float(sin(8 * M_PI + 0.51));
     memcpy(front_buffer, back_buffer, vSz);
-    get_key_down_evnt(key_down);
-    while(1) {}
+   // get_key_down_evnt(key_down);
+    //while(1) {}
     memcpy(front_buffer, back_buffer, vSz);
     game_init();
 
