@@ -1,12 +1,12 @@
 #include "error_handler.h"
 
-char* last_error = "null";
+const char* last_error = "null";
 
-char* get_last_error() {
+const char* get_last_error() {
     return last_error;
 }
 
-int set_last_error(char* e) {
+int set_last_error(const char* e) {
     if (e != 0)
         last_error = e;
     else {

@@ -1,5 +1,5 @@
-#ifndef __DOOM__OS_TYPES___
-#define __DOOM__OS_TYPES___
+#ifndef __MC__OS_TYPES___
+#define __MC__OS_TYPES___
 
 #include <stdint.h>
 

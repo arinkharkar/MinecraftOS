@@ -43,7 +43,6 @@ void game_init() {
 
     print_str("Ready, press Space to start");
     swap();
-    while (!is_key_down(' ')) {}
     clear_screen();
     last_ticks = ticks;
 }
@@ -53,7 +52,7 @@ void game_loop() {
     int deltaTime = ticks - last_ticks;
     
     // deltaTime is the time per frame, convert this to seconds and invert it for frames per second
-    float fps = 1 / ((float)deltaTime / 1000);
+    float fps = 1.0 / ((float)deltaTime / 1000.0);
     
     float speedDiv = 0.01;
     if (is_key_down('a'))
@@ -128,115 +127,10 @@ void game_loop() {
     
 
     update_viewm();
-    /*float fov = 68;
-    float S = 1 / (tan(fov * M_PI / 360));
-    float f = 300;
-    float n = 0.01;
 
-    vector3 cameraPos = {0, 0, 1000};
-    vector3 rightDir = {1, 0, 0};
-    vector3 upDir = {0, -1, 0};
-    vector3 fwdDir = {0, 0, -1};
+    print_float_inplace(fps, 0, 0);
 
-    matrix_m4s view_m = { rightDir[0], rightDir[1], rightDir[2], - dotvec3(rightDir, cameraPos),
-                          upDir[0],    upDir[1],    upDir[2],    - dotvec3(upDir, cameraPos),
-                          -fwdDir[0],   -fwdDir[1],   -fwdDir[2],   dotvec3(fwdDir, cameraPos),
-                          0        ,   0        ,   0,           1};
-
-    matrix_m4s proj_m = {S, 0, 0, 0,
-                         0, S, 0, 0,
-                         0, 0, -f/(f-n), -1,
-                         0, 0,  -(f*n)/(f-n), 1};
-    
-    vector4 worldPoint1 = {1, 0, 0, 1};
-    vector4 worldPoint2 = {1, -10, 0, 1};
-
-    vector4 cameraPoint1 = {0};
-    vector4 cameraPoint2 = {0};
-
-    vector4 screenPoint1 = {0};
-    vector4 screenPoint2 = {0};
-
-
-    // Convert from world space to camera space
-    multiply_m4sv(view_m, worldPoint1, cameraPoint1);
-    multiply_m4sv(view_m, worldPoint2, cameraPoint2);
-    
-    // Convert from camera space to screen space
-    multiply_m4sv(proj_m, cameraPoint1, screenPoint1);
-    multiply_m4sv(proj_m, cameraPoint2, screenPoint2);
-    
-   
-
-    screenPoint1[0] = (screenPoint1[0] / screenPoint1[3] + 1) / 2 * SCREEN_WIDTH;
-    screenPoint2[0] = (screenPoint2[0] / screenPoint2[3] + 1) / 2 * SCREEN_WIDTH;
-
-    screenPoint1[1] = (1 - screenPoint1[1] / screenPoint1[3]) / 2 * SCREEN_HEIGHT;
-    screenPoint2[1] = (1 - screenPoint2[1] / screenPoint2[3]) / 2 * SCREEN_HEIGHT;
-
-    print_float_inplace(screenPoint1[0], 0, 20);
-    print_float_inplace(screenPoint1[1], 100, 20);
-    print_float_inplace(screenPoint1[2], 200, 20);
-    print_float_inplace(screenPoint1[3], 300, 20);
-
-    print_float_inplace(screenPoint2[0], 0, 40);
-    print_float_inplace(screenPoint2[1], 100, 40);
-    print_float_inplace(screenPoint2[2], 200, 40);
-    print_float_inplace(screenPoint2[3], 300, 40);
-    //screenPoint1[0] = 0;
-    print_float_inplace((screenPoint2[1] - screenPoint1[1]) / (screenPoint2[0] - screenPoint1[0]), 400, 40);
-
-    if (cameraPoint1[2] > 0 || cameraPoint2[2] > 0)
-        return;
-        */
-
-    
- //   screenPoint1[0] = 0;
-    //draw_line(screenPoint1[0], screenPoint1[1], screenPoint2[0], screenPoint2[1], rgb(129, 37, 175));
-
-   
-    
-
-    /*
-    float fov = 50;
-    float x1 = 0 + cameraPos.x; float y1 = 0 + cameraPos.y; float z1 = 0 + cameraPos.z;
-    float x2 = 100 + cameraPos.x; float y2 = 100 + cameraPos.y; float z2 = cameraPos.z;
-
-    float projectedX1 = (x1) * fov / (fov + z1) + SCREEN_WIDTH / 2;
-    float projectedY1 = y1 * fov / (fov + z1) + SCREEN_HEIGHT / 2;
-    float projectedX2 = (x2) * fov / (fov + z2) + SCREEN_WIDTH / 2;
-    float projectedY2 = y2 * fov / (fov + z2) + SCREEN_HEIGHT / 2;
-    
-    draw_line(projectedX1, projectedY1, projectedX2, projectedY2, rgb(124, 0, 0));
-*/
-
-
-
-
-
-   // draw_line_f(0 + cameraPos.x, 0 + cameraPos.y, cameraPos.z, 10, 1);
-
-   // draw_cube(0, 0, 0, 20);
-    print_float_inplace(cos(0), 0, 0);
-    yaw += 0.001 * deltaTime;
-    if (yaw > 2 * M_PI)
-        yaw -= 2 * M_PI;
     last_ticks = ticks;
-  //  draw_line_f(0, 0, 0, 10, 0);
-   /* for (int x = 0; x < 4; x++) {
-        for (int y = 0; y < 4; y++) {
-            for (int z = 0; z < 4; z++) {
-                draw_cube(x*100, y*100, z*100, 100);
-            }
-        }
-    }
-    //draw_cube(0, 0, 0, 100);
-    //draw_cube(100, 0, 0, 100);
-   /* draw_line_f(0 + cameraPos.x, 0 + cameraPos.y, 20 + cameraPos.z, 1000, 0);
-    draw_line_f_f(0 + cameraPos.x + 1000, 0 + cameraPos.y - 1000, 20 + cameraPos.z, 1000, 1);
-    draw_line_f_f(0 + cameraPos.x, 0 + cameraPos.y - 1000, 20 + cameraPos.z, 1000, 1);
-    draw_line_f_f(0 + cameraPos.x, 0 + cameraPos.y - 1000, 20 + cameraPos.z, 1000, 0);*/
-    
     
 }
 

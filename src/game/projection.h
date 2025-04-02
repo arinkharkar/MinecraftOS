@@ -6,9 +6,10 @@
 
 constexpr  float fov = 68;
 
+
+constexpr  float aspect_ratio = 680.0f / 480.0f;
 // precomputed value for tan(fov in radians)
-constexpr  float aspect_ratio = 4.0f / 3.0f;
-constexpr  float tanfov = 0.67450851684;
+constexpr  float tanfov = 1;
 constexpr  float S = 1 / (tanfov );
 constexpr  float f = 300;
 constexpr  float n = 0.1;
@@ -30,7 +31,17 @@ constexpr  vector3 fwdDir = {0, 0, -1};
 static float pitch = 0;
 static float yaw = 0;
 static float roll = 0;
-static matrix_m4s rot_m = {  1, 0, 0, 0,
+static matrix_m4s rot_x = {  1, 0, 0, 0,
+                            0, 1, 0, 0,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1};
+
+static matrix_m4s rot_y = { 1, 0, 0, 0,
+                            0, 1, 0, 0,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1};
+
+static matrix_m4s rot_z = { 1, 0, 0, 0,
                             0, 1, 0, 0,
                             0, 0, 1, 0,
                             0, 0, 0, 1};
@@ -46,24 +57,52 @@ static inline void update_viewm() {
     set_index_m4s(view_m, 3, 1, - dotvec3(upDir, cameraPos));
     set_index_m4s(view_m, 3, 2, dotvec3(fwdDir, cameraPos));
 
-    set_index_m4s(rot_m, 0, 0, cos(yaw)*cos(roll) - sin(pitch)*sin(yaw)*sin(roll));
-    set_index_m4s(rot_m, 0, 1, -cos(yaw)*sin(roll) - sin(pitch)*sin(yaw)*cos(roll));
-    set_index_m4s(rot_m, 0, 2, sin(pitch)*cos(yaw));
-    set_index_m4s(rot_m, 1, 0, cos(pitch)*sin(roll));
-    set_index_m4s(rot_m, 1, 1, cos(pitch)*cos(roll));
-    set_index_m4s(rot_m, 1, 2, -sin(pitch));
-    set_index_m4s(rot_m, 2, 0, sin(yaw)*cos(roll) + sin(pitch)*cos(yaw)*sin(roll));
-    set_index_m4s(rot_m, 2, 1, -sin(yaw)*sin(roll) + sin(pitch)*cos(yaw)*cos(roll));
-    set_index_m4s(rot_m, 2, 2, cos(pitch)*cos(yaw));
+    set_index_m4s(rot_z, 0, 0, cos(roll));
+    set_index_m4s(rot_z, 0, 1, -sin(roll));
+    set_index_m4s(rot_z, 0, 2, 0);
+    
+    set_index_m4s(rot_z, 1, 0, sin(roll));
+    set_index_m4s(rot_z, 1, 1, cos(roll));
+    set_index_m4s(rot_z, 1, 2, 0);
+
+    set_index_m4s(rot_z, 2, 0, 0);
+    set_index_m4s(rot_z, 2, 1, 0);
+    set_index_m4s(rot_z, 2, 2, 1);
+
+    set_index_m4s(rot_x, 0, 0, 1);
+    set_index_m4s(rot_x, 0, 1, 0);
+    set_index_m4s(rot_x, 0, 2, 0);
+
+    set_index_m4s(rot_x, 1, 0, 0);
+    set_index_m4s(rot_x, 1, 1, cos(pitch));
+    set_index_m4s(rot_x, 1, 2, -sin(pitch));
+
+    set_index_m4s(rot_x, 2, 0, 0);
+    set_index_m4s(rot_x, 2, 1, sin(pitch));
+    set_index_m4s(rot_x, 2, 2, cos(pitch));
 
 
+    set_index_m4s(rot_y, 0, 0, cos(yaw));
+    set_index_m4s(rot_y, 0, 1, 0);
+    set_index_m4s(rot_y, 0, 2, sin(yaw));
+
+    set_index_m4s(rot_y, 1, 0, 0);
+    set_index_m4s(rot_y, 1, 1, 1);
+    set_index_m4s(rot_y, 1, 2, 0);
+
+    set_index_m4s(rot_y, 2, 0, -sin(yaw));
+    set_index_m4s(rot_y, 2, 1, 0);
+    set_index_m4s(rot_y, 2, 2, cos(yaw));
         
 }
 // transforms the point worldPoint into camera space in cameraPoint
 static inline void world_to_camera_project(const vector4 worldPoint, vector4 cameraPoint) { 
-    matrix_m4s rotated_m;
-    multiply_m4s((float*)view_m, rot_m, rotated_m);
-    multiply_m4sv((float*)rotated_m, worldPoint, cameraPoint); 
+    matrix_m4s rotated_m, rotated_mtemp;
+    multiply_m4s(rot_y, rot_x, rotated_mtemp);
+    multiply_m4s(rotated_mtemp, rot_z, rotated_m);
+    multiply_m4s((float*)view_m, rotated_m, rotated_mtemp);
+
+    multiply_m4sv((float*)rotated_mtemp, worldPoint, cameraPoint); 
 }
 static inline void camera_to_ndc_project(const vector4 cameraPoint, vector4 ndcPoint) { 
 

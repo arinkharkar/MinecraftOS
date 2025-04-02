@@ -61,17 +61,17 @@ static char* itoa(int value, char* str, int base) {
 
 static char* float_to_str(float num, char* str, int precision) {
     if (isnan(num)) {
-        char* nanLoc = "NaN";
+        const char* nanLoc = "NaN";
         memcpy(str, nanLoc, strlen(nanLoc)+1);
         return str;
     }
     if (num == INFINITY) {
-        char* nanLoc = "Inf";
+        const char* nanLoc = "Inf";
         memcpy(str, nanLoc, strlen(nanLoc)+1);
         return str;
     }
     if (num == -INFINITY) {
-        char* nanLoc = "-Inf";
+        const char* nanLoc = "-Inf";
         memcpy(str, nanLoc, strlen(nanLoc)+1);
         return str;
     }

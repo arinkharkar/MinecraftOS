@@ -1,4 +1,5 @@
 #include "ps2keyboard.h"
+#include <draw.h>
 
 // stores the state of each key
 uint8_t keyboard_state[128] = {0};
@@ -18,38 +19,63 @@ void writetosecondps2port(uint8_t data) {
 
 
 int init_ps2keyboard() {
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0xA8);
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0x20);  
-    
-    while(!(inb(0x64) & 1)) {}  
-    uint8_t c = inb(0x60);
-    c |= 0b11;
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0x60);
-    while((inb(0x64) & 2)) {}
-    outb(0X60, c);
 
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0xD4);
-    while((inb(0x64) & 2)) {}
-    outb(0x60, 0xF6);
-
-    while(!(inb(0x64) & 1)) {}  
-    c = inb(0x60);
-
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0xD4);
-    while((inb(0x64) & 2)) {}
-    outb(0x60, 0xF4);
+    // Disable the ps/2 devices while we set up everything
+   // disable_ps2_devices();
     
-    while(!(inb(0x64) & 1)) {}  
-    c = inb(0x60);
+    // Flush any extra data in the data buffer
+    inb(PS2_DATA_PORT);
+    
+/*
+    // Set the Controller Config Byte
+    byte c = get_ps2_controllerconfig_byte();
+    c = 0b00000100;
+    swap();
+    // Set the PS/2 Controller Config Byte
+    if (set_ps2_controllerconfig_byte(c) == ERROR)
+        return ERROR;
+        
+    // Making sure the PS/2 Controller works
+    if (test_ps2controller() == ERROR)
+        return ERROR;
 
+        
+    bool isSecondChannel = false;
+    if (ps2_enable_second_channel()) {
+        print_str("Second Channel Exists!");
+        isSecondChannel = true;
+    } else
+        print_str("Second Channel Not Found!");
+
+    test_ps2ports(isSecondChannel);
+
+        // Enable the first PS/2 Port
+    if (enable_ps2ports(isSecondChannel) == ERROR)
+        return ERROR;
+        
+    if (ps2_reset_devices() == ERROR)
+        return ERROR;
     
-    
-    // Not needed anymore
+    c = get_ps2_controllerconfig_byte();
+    c = 0b00110100;
+    if (isSecondChannel)
+        c |= 0b00000011;
+    else
+        c |= 0b00000001;
+    // Set the PS/2 Controller Config Byte
+    if (set_ps2_controllerconfig_byte(c) == ERROR)
+        return ERROR;
+
+ */   
+
+    ps2_controller_waittowrite();
+    ps2_write_to_dataport(0xF4);
+ 
+    ps2_controller_waittoread();
+    print_str("\nScancode: ");
+    print_hex(ps2_read_from_dataport());
+    print_ch('\n');
+
     return SUCCESS;
 
 }
@@ -66,13 +92,13 @@ int init_ps2keyboard() {
         keyboard_state[k] = KEY_IS_UP;
         // call all of the keyup callbacks
         for (int i = 0; i < total_keyup_callbacks_in_use; i++) {
-            if ((size_t)keyup_callbacks != NULL)
+            if ((void*)keyup_callbacks != NULL)
                 keyup_callbacks[i](k);
         }
     } else {
         keyboard_state[k] |= (KEY_IS_DOWN);
         for (int i = 0; i < total_keydown_callbacks_in_use; i++) {
-            if ((size_t)keydown_callbacks != NULL)
+            if ((void*)keydown_callbacks != NULL)
                 keydown_callbacks[i](k);
         }
     }

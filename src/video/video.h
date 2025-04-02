@@ -2,12 +2,14 @@
 #define __VIDEO__H__
 #include <stdint.h>
 #include <stdbool.h>
-#include <doomOS_types.h>
+#include <string.h>
+#include <minecraftOS_types.h>
 #include <eightdata.h>
 #include <error_handler.h>
 #include <multiboot.h>
 #include <asciibmp.h>
 #include <stdlib.h>
+
 
 #define CHAR_HEIGHT 13
 #define CHAR_WIDTH 16
@@ -69,6 +71,8 @@ void draw_moving_img();
 void draw_vertical_line(int yAxis, int len, color col);
 // clears the screen to black
 void clear_screen();
+
+extern uint32_t vSz;
 
 static color rgb(int r, int g, int b) {return ((r << 16) | (g << 8) | (b));};
 #endif

@@ -3,15 +3,12 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "io.h"
 #include <video.h>
+#include "ps2_helper.h"
+#include "io.h"
 
 
-#define PS2_ACK 0xFA
-#define PS2_RESEND 0xFE
-#define PS2_DATA_PORT 0x60
-#define PS2_STATUS_PORT 0x64
-#define PS2_COMMAND_REGISTER 0X64
+
 
 
 #define BREAK_BIT 0b10000000

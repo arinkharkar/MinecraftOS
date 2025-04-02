@@ -3,7 +3,11 @@
 
 #include <stdbool.h>
 
+#ifdef INFINITY 
+#undef INFINITY
+#endif
 #define INFINITY (1.0/0.0)
+
 
 #define M_PI ((float)3.1415926535)
 #define PI ((float)3.1415926535)

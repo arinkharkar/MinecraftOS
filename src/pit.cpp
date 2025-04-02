@@ -15,11 +15,13 @@ void init_pit(int freq) {
     // send the lower 8 bits of the divisor
     outb(0x40, div & 0b11111111);
     // send the higher 8 bits of the divisor
-    outb(0x40, (div >> 8) & 0b11111111);
+    outb(0x40, (div >> 8) & 0b11111111);    
 }
 
 uint32_t ticks = 0;
-
+extern int sec;
 void pit_callback() {
     ticks++;
+    if (ticks % 1000 == 0)
+        sec++;
 }

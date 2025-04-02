@@ -28,7 +28,7 @@ stack_top:
 
 .section .rodata
 critical_error_message:
-.asciz "Critical Error, DoomOS has halted"
+.asciz "Critical Error, MinecraftOS has halted"
 
 .section .text
 

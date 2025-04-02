@@ -1,5 +1,6 @@
 #include "ps2mouse.h"
 #include <video.h>
+#include <draw.h>
 #include "cursor.h"
 
 int mCoordx = 500;
@@ -24,18 +25,16 @@ void mouse_recv() {
     if (mCoordy - rel_y >= SCREEN_HEIGHT || mCoordy - rel_y <= 0) {}
     else
         mCoordy -= rel_y;
+    print_str("mouse_recv()");
+    swap();
+}
 
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 20; j++) {
-            plot_pixel(i+lmCoordx, j+lmCoordy, rgb(0, 140, 227));
-        }
-    }  
-    lmCoordx = mCoordx;
-    lmCoordy = mCoordy;
+
+void draw_cursor() {
     for (int i = 0; i < 20; i++) {
         for (int j = 0; j < 20; j++) {
             if (cursor[j+i*20])
-                plot_pixel(i+mCoordx, j+mCoordy, 0x0);
+                plot_pixel(i+mCoordx, j+mCoordy, rgb(0, 0, 0));
         }
     }  
 }

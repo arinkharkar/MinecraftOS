@@ -46,7 +46,7 @@ static void* memcpy(void* dest, const void* src, size_t n) {
 }
 
 
-static size_t strlen(char* s) {
+static size_t strlen(const char* s) {
     size_t sz = 0;
     while (*s) {
         s++;
