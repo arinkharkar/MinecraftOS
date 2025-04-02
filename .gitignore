@@ -1,4 +1,4 @@
 bin/*
 .vscode/*
-iso/boot/doomos.bin
-doomos.iso
+iso/boot/minecraftos.bin
+minecraftOS.iso
