@@ -10,23 +10,18 @@ void(*keydown_callbacks[128])(key_state_t key);
 void(*keyup_callbacks[128])(key_state_t key);
 
 
-void writetosecondps2port(uint8_t data) {
-    while((inb(0x64) & 2)) {}
-    outb(0x64, 0xD4);
-    while((inb(0x64) & 2)) {}
-    outb(0x60, data);
-}
+
 
 
 int init_ps2keyboard() {
-
+/*
     // Disable the ps/2 devices while we set up everything
-   // disable_ps2_devices();
+    disable_ps2_devices();
     
     // Flush any extra data in the data buffer
     inb(PS2_DATA_PORT);
     
-/*
+
     // Set the Controller Config Byte
     byte c = get_ps2_controllerconfig_byte();
     c = 0b00000100;
@@ -66,18 +61,55 @@ int init_ps2keyboard() {
     if (set_ps2_controllerconfig_byte(c) == ERROR)
         return ERROR;
 
- */   
+    print_str("HEREHEHRR\n");
 
-    ps2_controller_waittowrite();
+    ps2_controller_waittowrite();;
     ps2_write_to_dataport(0xF4);
- 
     ps2_controller_waittoread();
-    print_str("\nScancode: ");
+    print_str("\nScancode1: ");
     print_hex(ps2_read_from_dataport());
     print_ch('\n');
 
-    return SUCCESS;
+    //ps2_controller_waittoread();
+    if (/*isSecondChanneltrue) {
+        writetosecondps2port(0xF4);
 
+        print_str("\nScancode2: ");
+        ps2_controller_waittoread();
+        print_hex(ps2_read_from_dataport());
+        print_ch('\n');
+    }
+    
+
+    
+    return SUCCESS;
+*/
+    // Enable the second ps2 port (technically we should check if there are 2 but every pc since like 1990 supports two soo)
+    ps2_controller_waittowrite();
+    ps2_write_to_commandport(PS2_ENABLE_SECOND_PORT);
+
+    // get and modify the ps2 controller byte
+    byte c = get_ps2_controllerconfig_byte();
+    c |= 0b11;
+    set_ps2_controllerconfig_byte(c);
+
+    writetosecondps2port(PS2_DEVICE_SET_DEFAULTS);
+
+    ps2_controller_waittoread();  
+    c = ps2_read_from_dataport();
+    print_str("HEX: ");
+    print_hex(c);
+
+    writetosecondps2port(PS2_DEVICE_ENABLE_SCANNING);
+    
+    ps2_controller_waittoread();  
+    c = ps2_read_from_dataport();
+print_str("HEX: ");
+    print_hex(c);
+    
+    
+    // Not needed anymore
+    return SUCCESS;
 }
 
 

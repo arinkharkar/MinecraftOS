@@ -108,7 +108,10 @@ bool ps2_enable_second_channel() {
 
 
 int ps2_reset_devices() {
+    int resetCounter = 0;
 a:
+    if (resetCounter == 4)
+        return ERROR;
     ps2_controller_waittowrite();
     ps2_write_to_dataport(PS2_RESET_DEVICES);
 
@@ -124,6 +127,7 @@ a:
         return ERROR;
     } else if (res == PS2_RESEND) {
         print_str("Invalid Response after resetting PS/2 Controller, Resending...");
+        resetCounter++;
         swap();
         goto a;
     } else {
@@ -174,12 +178,19 @@ void ps2_controller_waittowrite() {
 
 // Wait to make sure its okay to read from the PS2 Data Port
 void ps2_controller_waittoread() {
-    const int MAX_TIMES = 1e6;
+    const int MAX_TIMES = 1e7;
     int times = 0;
     while (!(inb(PS2_STATUS_PORT) &  0b00000001) && times < MAX_TIMES) { times++; }
     if (times == MAX_TIMES) {
         print_str("MAX READ");
     }
+}
+
+void writetosecondps2port(byte data) {
+    while((inb(PS2_STATUS_PORT) & 2)) {}
+    outb(PS2_STATUS_PORT, 0xD4);
+    while((inb(PS2_STATUS_PORT) & 2)) {}
+    outb(PS2_DATA_PORT, data);
 }
 
 void ps2_write_to_commandport(byte data) {

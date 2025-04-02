@@ -41,17 +41,18 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     } else {
         print_str("Enabled GDT!\n");
     }
+    if (init_ps2keyboard() == ERROR) {
+        print_str("Error with keyboard\n");
+    } else {
+        print_str("Enabled Keyboard\n");
+    }
     if (init_idt() == ERROR) {
         print_str("Error Enabling IDT\n");
         print_str(get_last_error());
     } else {
         print_str("Enabled Interupts!\n");
     }
-    if (init_ps2keyboard() == ERROR) {
-        print_str("Error with keyboard\n");
-    } else {
-        print_str("Enabled Keyboard\n");
-    }
+
     init_fpu();
     print_str("\nResolution: ");
     print_int(SCREEN_WIDTH);
@@ -61,6 +62,8 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     init_pit(1000);
     print_float(sin(8 * M_PI + 0.51));
     memcpy(front_buffer, back_buffer, vSz);
+    get_key_down_evnt(key_down);
+    while(1) {}
     memcpy(front_buffer, back_buffer, vSz);
     game_init();
 

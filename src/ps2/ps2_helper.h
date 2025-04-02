@@ -32,6 +32,8 @@
 
 #define PS2_WRITE_TO_PORT2 0xD4
 
+#define PS2_DEVICE_SET_DEFAULTS 0xF6
+#define PS2_DEVICE_ENABLE_SCANNING 0xF4
 
 #define PS2_TEST_FIRST_PORT_PASSED 0x00
 
@@ -69,6 +71,8 @@ int ps2_reset_devices();
 void disable_ps2_devices();
 
 bool ps2_enable_second_channel();
+
+void writetosecondps2port(byte data);
 
 int test_ps2ports(bool secondPortExists);
 

@@ -41,7 +41,6 @@ $(ISO)/boot/minecraftOS.bin: $(BIN)/minecraftOS.bin $(ISO)/boot
 $(BOOT): $(ISO)/boot/minecraftOS.bin
 	$(GRUB) --xorriso=$(XORRISO) -o $@ $(ISO)
 	cp minecraftOS.iso /mnt/c/users/arin/documents
-	cp iso/boot/minecraftOS.bin /mnt/c/MinecraftOS/
 
 clean:
 	rm -rf $(BIN) $(BOOT) $(ISO)/boot/minecraftOS.bin
