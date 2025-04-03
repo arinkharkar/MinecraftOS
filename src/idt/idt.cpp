@@ -8,7 +8,7 @@
 #include "pit.h"
 
 void register_interupt(int intNo, void(*function)());
-void idt_enable();
+extern "C" void idt_enable();
 
 #ifndef __STD_LIB_H_
 static char* itoa(int value, char* str, int base);
@@ -65,7 +65,7 @@ void irq_remap()
 
 }
 
-void interrupt_handler(exception_regs r) {
+extern "C" void interrupt_handler(exception_regs r) {
     // If the interupt is an exception
     if (r.int_no < 32) {
         print_str("CRITICAL EXCEPTION OCCURED, MinecraftOS has terminated: ");

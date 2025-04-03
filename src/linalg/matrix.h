@@ -19,12 +19,12 @@ typedef float vector2[2];
 typedef float* matrix_f;
 
 // compute dot product of 2 vector4s
-constexpr static inline float dotvec4(const vector4 a, const vector4 b) {
+static inline float dotvec4(const vector4 a, const vector4 b) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3];
 }
 
 // compute dot product of 2 vector3s
-constexpr static inline float dotvec3(const vector3 a, const vector3 b) {
+static inline float dotvec3(const vector3 a, const vector3 b) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 

@@ -32,6 +32,8 @@ void* calloc(size_t number, size_t size) {
     return rVal;
 }
 
+#ifdef __cplusplus
+
 void* operator new(size_t, void* p)      { return p; }
 void* operator new[](size_t, void* p)    { return p; }
 void* operator new(size_t size)          { return malloc(size); }
@@ -39,3 +41,5 @@ void* operator new(size_t size)          { return malloc(size); }
 // TODO: Hell nah who do you think i am 😭🙏 we dont need delete
 void operator delete(void* p)            {  }
 void operator delete(void* p, size_t)    {  }
+
+#endif

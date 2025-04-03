@@ -26,7 +26,7 @@ static cursor_pos current_cursos_pos;
 
 int init_video(multiboot_info_t* multiboot_info) {
     // get all the screen values from GRUB
-    uint8_t* vMem = (uint8_t*)multiboot_info->framebuffer_addr;
+    uint8_t* vMem = (uint8_t*)(size_t)multiboot_info->framebuffer_addr;
     int w, h, bpp;
     w = multiboot_info->framebuffer_width;
     h = multiboot_info->framebuffer_height;

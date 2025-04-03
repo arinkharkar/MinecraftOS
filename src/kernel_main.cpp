@@ -28,7 +28,7 @@ void key_down(key_state_t s) {
 }
 
 int sec = 0;
-void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
+extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     if (init_video(mbd) == ERROR) {
         // Cant print a message as the video hasnt been inited
         while(1) {}

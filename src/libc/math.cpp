@@ -2,7 +2,7 @@
 
 
 // implemented in floatarith.S
-float _internalsin(float angle);
+extern "C" float _internalsin(float angle);
 
 float sin(float angle) {
     // since sin repeats every 2pi, first bring the value down below / at 2pi
