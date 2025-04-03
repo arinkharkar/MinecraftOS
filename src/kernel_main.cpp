@@ -92,7 +92,7 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
 }
 
 
-
+// genuinely no idea what this does, also i dont remember where I got it but I did not write this
 void init_fpu() {
     size_t t;
 

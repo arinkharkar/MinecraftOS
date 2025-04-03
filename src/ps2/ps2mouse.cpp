@@ -43,23 +43,56 @@ int init_ps2_mouse() {
 
     return SUCCESS;   
 }
-
 extern int sec;
+void restart_ps2_mouse() {
+    // Disable keyboard scanning
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_DEVICE_DISABLE_SCANNING);
+    ps2_controller_waittoread(); 
+    byte c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return;
+
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_RESET_DEVICE);
+    ps2_controller_waittoread();
+    print_hex(recv_from_mouse());
+    swap();
+
+    // Disable keyboard scanning
+    ps2_controller_waittowrite();
+    write_to_mouse(PS2_DEVICE_ENABLE_SCANNING);
+    ps2_controller_waittoread(); 
+    c = recv_from_mouse();
+    if (c != PS2_ACK)
+        return;
+
+    init_ps2_mouse();
+}
+
+
 void mouse_recv() {
     uint8_t b1 = recv_from_mouse();
     uint8_t xMov = recv_from_mouse();
     uint8_t yMov = recv_from_mouse();
+
     if (b1 & 0b11000000) {
         print_int_inplace(sec, 230, 600);
-       // return;
+        return;
     }
 
+    
 
-    uint8_t state = b1;
+    int rel_x, rel_y;
+    if (b1 & 0b00010000)
+        rel_x += ((int)xMov) | 0xFFFFFF00;
+    if (b1 & 0b00100000)
+        rel_y += ((int)yMov) | 0xFFFFFF00;
+   /* uint8_t state = b1;
 	uint8_t d = xMov;
 	int rel_x = d - ((state << 4) & 0x100);
 	d = yMov;
-	int rel_y = d - ((state << 3) & 0x100);
+	int rel_y = d - ((state << 3) & 0x100);*/
 
     if (!(b1 & 0b00001000)) {
         print_str_inplace("ERROR BYTE", 230, 600);
