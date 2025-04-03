@@ -1,13 +1,13 @@
 import os
 
-def rename_c_to_cpp(directory):
+def rename_cpp_to_c(directory):
     for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith(".c"):
+            if file.endswith(".cpp"):
                 old_path = os.path.join(root, file)
-                new_path = os.path.join(root, file[:-2] + ".cpp")
+                new_path = os.path.join(root, file[:-2] + ".c")
                 os.rename(old_path, new_path)
                 print(f"Renamed: {old_path} -> {new_path}")
 
 if __name__ == "__main__":
-    rename_c_to_cpp(os.getcwd())
+    rename_cpp_to_c(os.getcwd())

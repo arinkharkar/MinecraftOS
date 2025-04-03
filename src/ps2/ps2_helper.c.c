@@ -300,7 +300,6 @@ int init_ps2controller() {
     }
 
     if (type2 == PS2_MOUSE || type2 == PS2_5BTN_MOUSE || type2 == PS2_MOUSE_SCROLL_WHL) {
-        print_str("He");
         write_to_mouse = ps2_write_to_secondport;
         recv_from_mouse = ps2_read_from_dataport;
       // There are more types of keyboards, shouldnt run into them though

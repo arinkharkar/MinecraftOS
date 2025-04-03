@@ -42,7 +42,7 @@
 #define PS2_TEST_FIRST_PORT_PASSED 0x00
 
 // All Known PS/2 Device Types included for completness, 99% of the time will only need PS2_MOUSE and PS2_KYBD
-enum ps2_device_types {
+typedef enum {
     PS2_ERROR_TYPE = -1,
     PS2_MOUSE = 0x0,
     PS2_MOUSE_SCROLL_WHL = 0x3,
@@ -56,7 +56,7 @@ enum ps2_device_types {
     PS2_JP_P_KYBD = 0x91,
     PS2_JP_A_KYBD = 0x92,
     PS2_NCD_SUN_KYBD = 0xA1
-};
+} ps2_device_types;
 
 // After Intializing the PS/2 Controller, these will be used by the keyboard and mouse driver to control each device respectively
 extern void(*write_to_keyboard)(byte data);

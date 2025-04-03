@@ -8,7 +8,7 @@ gdt_segment gdt[GDT_ENTRY_COUNT];
 gdt_ptr pgdt;
 
 // assembly function in gdt_enable.S to run the lgdt instruction
-extern "C" void activate_gdt();
+void activate_gdt();
 
 /*
  The GDT we will be using is extremely simple, our structure is:

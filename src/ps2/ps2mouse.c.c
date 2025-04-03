@@ -51,18 +51,23 @@ void mouse_recv() {
     uint8_t yMov = recv_from_mouse();
     if (b1 & 0b11000000) {
         print_int_inplace(sec, 230, 600);
-        return;
+       // return;
     }
 
-    if (!(b1 & 0b00001000)) {
-        print_str_inplace("ERROR BYTE", 230, 600);
-        return;
-    }
+
     uint8_t state = b1;
 	uint8_t d = xMov;
 	int rel_x = d - ((state << 4) & 0x100);
 	d = yMov;
 	int rel_y = d - ((state << 3) & 0x100);
+
+    if (!(b1 & 0b00001000)) {
+        print_str_inplace("ERROR BYTE", 230, 600);
+        print_int_inplace(rel_x, 280, 700);
+        print_int_inplace(rel_y, 300, 750);
+        return;
+    }
+
     if (mCoordx + rel_x >= SCREEN_WIDTH || mCoordx + rel_x <= 0) {}
     else
         mCoordx += rel_x;
