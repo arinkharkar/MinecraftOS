@@ -97,6 +97,9 @@ static uint8_t keyboard_layout_us[2][128] = {
     }
 };
 
+#ifndef KEY_SPACE
+#define KEY_SPACE ' '
+#endif
 
 //typedef void(*callback)(key_state_t key) key_callback_f;
 

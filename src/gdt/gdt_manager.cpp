@@ -32,6 +32,7 @@ int init_gdt() {
     pgdt.base = (uint32_t)&gdt[0];
     pgdt.limit = sizeof(gdt[0]) * GDT_ENTRY_COUNT - 1;
     activate_gdt();
+    asm volatile("cli");
     return SUCCESS;
 }
 

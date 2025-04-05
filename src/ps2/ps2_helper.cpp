@@ -21,7 +21,6 @@ bool test_ps2controller() {
     byte res = ps2_read_from_dataport();
     
     if (res == PS2_CONTROLLER_TEST_PASSED) {
-        print_str("PS/2 Keyboard Test Passed!");
         return true;
     } else if (res == PS2_CONTROLLER_TEST_FAILED) {
         print_str("PS/2 Keyboard Test Failed!");

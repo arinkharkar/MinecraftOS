@@ -43,6 +43,7 @@ void game_init() {
 
     print_str("Ready, press Space to start");
     swap();
+    while (!is_key_down(KEY_SPACE)) {}
     clear_screen();
     last_ticks = ticks;
 }

@@ -86,7 +86,6 @@ extern "C" void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
         draw_cursor();
         if (ticks % 1000 == 0)
             sec++;
-        print_int_inplace(sec, 100, 100);
         memcpy(front_buffer, back_buffer, vSz);
     }
 }
