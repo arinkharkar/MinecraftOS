@@ -8,7 +8,7 @@
 #include "pit.h"
 
 void register_interupt(int intNo, void(*function)());
-extern "C" void idt_enable();
+EXTERN_C void idt_enable();
 
 #ifndef __STD_LIB_H_
 static char* itoa(int value, char* str, int base);
@@ -31,7 +31,7 @@ int init_idt() {
     idt_enable();
     irq_remap();
     register_exceptions();
-    asm("sti");
+    enable_interupts();
     return SUCCESS;
 }
 
@@ -65,16 +65,29 @@ void irq_remap()
 
 }
 
-extern "C" void interrupt_handler(exception_regs r) {
+EXTERN_C void interrupt_handler(exception_regs r) {
     // If the interupt is an exception
     if (r.int_no < 32) {
-        print_str("CRITICAL EXCEPTION OCCURED, MinecraftOS has terminated: ");
-        print_str(exception_messages[r.int_no]);
-        print_str("\nException Number: ");
+        char error_message[100] = {0};
+        // Combine the error message and pass it to PANIC
+        const char* first_msg_part = "CRITICAL EXCEPTION OCCURED, MinecraftOS has terminated: ";
+        int len = strlen(first_msg_part);
+        // copy the first part of the error message to error_message
+        strcpy(error_message, first_msg_part);
+        // offset by the first_msg_part length
+        strcpy(&error_message[len], exception_messages[r.int_no]);
+        len += strlen(error_message);
+
+        
+        const char* second_msg_part = "\nException Number: ";
+        strcpy(&error_message[len], second_msg_part);
+        len += strlen(second_msg_part);
+
         char s_int_no[15];
         itoa(r.int_no, s_int_no, 10);
-        print_str(s_int_no);
-        asm("cli;hlt");
+        strcpy(&error_message[len], s_int_no);
+
+        PANIC(error_message);
     } else if (r.int_no < 48) {
         if (r.int_no == 32) {
             pit_callback();

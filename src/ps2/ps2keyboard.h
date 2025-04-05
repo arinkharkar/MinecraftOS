@@ -72,6 +72,8 @@
 #define RCTRL_PRESSED 1 << 5
 #define KEY_IS_UP 0
 
+// 10 min
+#define INACTIVITY_TIME_SECONDS (2)
 
 typedef uint8_t key_state_t;
 
@@ -115,6 +117,7 @@ bool is_key_down(key_state_t key);
 int get_key_down_evnt(void(*callback)(key_state_t));
 int get_key_up_evnt(void(*callback)(key_state_t));
 
+void check_for_kybd_inactivity();
 
 
 #endif

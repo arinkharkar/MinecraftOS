@@ -13,16 +13,13 @@ uint32_t SCREEN_HEIGHT;
 uint32_t SCREEN_BPP;
 
 // pointer to video memory, do not draw to this, instead use plot_pixel, due to the hardcoded 1080p restriction, we cannot support higher resolutions
-uint32_t back_buffer[1920*1080];
-//uint32_t* back_buffer = (uint32_t*)1;
-uint32_t* front_buffer = (uint32_t*)1;
+uint32_t back_buffer[BACK_BUFFER_SIZE];
 
-typedef struct {
-    int x;
-    int y;
-} cursor_pos;
+uint32_t* front_buffer = FRONT_BUFFER_DEFAULT_VAL;
 
-static cursor_pos current_cursos_pos;
+uint32_t vSz;
+
+static position_t current_cursor_pos;
 
 int init_video(multiboot_info_t* multiboot_info) {
     // get all the screen values from GRUB
@@ -38,21 +35,26 @@ int init_video(multiboot_info_t* multiboot_info) {
     }
     
     front_buffer = (uint32_t*)multiboot_info->framebuffer_addr;
-    //front_buffer = back_buffer;
+
     SCREEN_WIDTH = w;
     SCREEN_HEIGHT = h;
     SCREEN_BPP = bpp;
-    current_cursos_pos.x = 0;
-    current_cursos_pos.y = 0;
+    current_cursor_pos.x = 0;
+    current_cursor_pos.y = 0;
 
-    draw_moving_img();
+    vSz = SCREEN_BPP / BITS_PER_BYTE * SCREEN_WIDTH * SCREEN_HEIGHT;
+
+    fill_screen(rgb(87, 0, 61));
+
+    swap();
+
     return SUCCESS;
 }
 
-void draw_moving_img() {
+void fill_screen(color col) {
     for (int i = 0; i < SCREEN_WIDTH; i++) {
         for (int j = 0; j < SCREEN_HEIGHT; j++) {
-            plot_pixel(i, j, rgb(0, 140, 227));
+            plot_pixel_f(i, j, col);
         }
     }
 }
@@ -131,41 +133,41 @@ int print_floatd(float num, int digits) {
 
 int print_float_inplace(float num, int x, int y) {
     // save the cursor position so that we can set the cursor back here after we are done printing
-    cursor_pos old_cursor_pos = current_cursos_pos;
-    current_cursos_pos.x = x;
-    current_cursos_pos.y = y;
+    position_t old_cursor_pos = current_cursor_pos;
+    current_cursor_pos.x = x;
+    current_cursor_pos.y = y;
     int rVal = print_floatd(num, 4);
-    current_cursos_pos = old_cursor_pos;
+    current_cursor_pos = old_cursor_pos;
     return rVal;
 }
 
 int print_int_inplace(int num, int x, int y) {
     // save the cursor position so that we can set the cursor back here after we are done printing
-    cursor_pos old_cursor_pos = current_cursos_pos;
-    current_cursos_pos.x = x;
-    current_cursos_pos.y = y;
+    position_t old_cursor_pos = current_cursor_pos;
+    current_cursor_pos.x = x;
+    current_cursor_pos.y = y;
     int rVal = print_int(num);
-    current_cursos_pos = old_cursor_pos;
+    current_cursor_pos = old_cursor_pos;
     return rVal;
 }
 
 int print_str_inplace(const char* str, int x, int y) {
     // save the cursor position so that we can set the cursor back here after we are done printing
-    cursor_pos old_cursor_pos = current_cursos_pos;
-    current_cursos_pos.x = x;
-    current_cursos_pos.y = y;
+    position_t old_cursor_pos = current_cursor_pos;
+    current_cursor_pos.x = x;
+    current_cursor_pos.y = y;
     int rVal = print_str(str);
-    current_cursos_pos = old_cursor_pos;
+    current_cursor_pos = old_cursor_pos;
     return rVal;
 }
 
 int print_bool_inplace(bool b, int x, int y) {
     // save the cursor position so that we can set the cursor back here after we are done printing
-    cursor_pos old_cursor_pos = current_cursos_pos;
-    current_cursos_pos.x = x;
-    current_cursos_pos.y = y;
+    position_t old_cursor_pos = current_cursor_pos;
+    current_cursor_pos.x = x;
+    current_cursor_pos.y = y;
     int rVal = print_bool(b);
-    current_cursos_pos = old_cursor_pos;
+    current_cursor_pos = old_cursor_pos;
     return rVal;
 }
 
@@ -175,27 +177,35 @@ int draw_char(char c) {
     if (c >= ' ' && c <= '~') {       
         for (int i = 0; i < CHAR_HEIGHT; i++) {
             // if the character is going to go outside of screen bounds, move it to the next line
-            if (current_cursos_pos.x + CHAR_WIDTH > SCREEN_WIDTH) {
-                current_cursos_pos.x = 0;
-                current_cursos_pos.y += (CHAR_HEIGHT + 1);
+            if (current_cursor_pos.x + CHAR_WIDTH > SCREEN_WIDTH) {
+                current_cursor_pos.x = 0;
+                current_cursor_pos.y += (CHAR_HEIGHT + 1);
             }
             for (int j = CHAR_WIDTH - 1; j >=0; j--) {
                 if ((ascii_letter_font[c - ' '][i] >> j) & 0b00000001) {
-                    plot_pixel(CHAR_WIDTH - j + current_cursos_pos.x, CHAR_HEIGHT - i + current_cursos_pos.y, 0xFFFFFF);
+                    plot_pixel(CHAR_WIDTH - j + current_cursor_pos.x, CHAR_HEIGHT - i + current_cursor_pos.y, 0xFFFFFF);
                 }
             }
         }
         // despite the font being 16 wide, no characters are that wide so 10 works fine, 6 is arbitrary and can be changed to add more/less space between chars
-        current_cursos_pos.x += CHAR_WIDTH - 6;
+        current_cursor_pos.x += CHAR_WIDTH - 6;
     } else if(c == '\n') {
         // Slightly more than the character's height to add a little space in between them
-        current_cursos_pos.y += (CHAR_HEIGHT + 1);
-        current_cursos_pos.x = 0;
+        current_cursor_pos.y += (CHAR_HEIGHT + 1);
+        current_cursor_pos.x = 0;
     } else {
         set_last_error("Error, trying to print invalid char (not valid ascii)");
         return ERROR;
     }
     return SUCCESS;
+}
+
+void draw_image(const uint32_t* p_img_data, const uint32_t width, const uint32_t height, const uint32_t startX, const uint32_t startY) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            plot_pixel_f(j+startX, i+startY, p_img_data[j+i*width]);
+        }
+    } 
 }
 
 void draw_vertical_line(int yAxis, int len, color col) {
@@ -205,8 +215,5 @@ void draw_vertical_line(int yAxis, int len, color col) {
 }
 
 void clear_screen() {
-    for (int i = 0; i < SCREEN_WIDTH; i++) {
-        for (int j = 0; j < SCREEN_HEIGHT; j++)
-            back_buffer[i + j * SCREEN_WIDTH] = 0;
-    }
+    fill_screen(COLOR_BLACK);
 }

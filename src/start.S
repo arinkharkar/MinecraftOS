@@ -1,15 +1,16 @@
 .section .multiboot
+.global GRUB_MAGIC_NUMBER
 /* Declare constants for the multiboot header. */
 .set ALIGN,      1<<0             /* align loaded modules on page boundaries */
 .set MEMINFO,    1<<1             /* provide memory map */
 .set VIDEO_MODE, 1<<2            /* enable video mode */
 .set FLAGS,    ALIGN | MEMINFO | VIDEO_MODE  /* this is the Multiboot 'flag' field */
-.set MAGIC,    0x1BADB002       /* 'magic number' lets bootloader find the header */
-.set CHECKSUM, -(MAGIC + FLAGS) /* checksum of above, to prove we are multiboot */
+.set GRUB_MAGIC_NUMBER,    0x1BADB002       /* 'magic number' lets bootloader find the header */
+.set CHECKSUM, -(GRUB_MAGIC_NUMBER + FLAGS) /* checksum of above, to prove we are multiboot */
 
 multiboot:
 .align 4
-.long MAGIC
+.long GRUB_MAGIC_NUMBER
 .long FLAGS
 .long CHECKSUM
 .long 0,0,0,0,0
@@ -18,12 +19,12 @@ multiboot:
 .long 680, 480, 24
 
 /*
- * Create a 16 Kb stack, will later move %esp to stack top
+ * Create a 64 Kb stack, will later move %esp to stack top
  */
 .section .bss
 .align 16
 stack_bottom:
-.skip 16384 # 16 KiB
+.skip 65536 # 64 KB
 stack_top:
 
 .section .rodata

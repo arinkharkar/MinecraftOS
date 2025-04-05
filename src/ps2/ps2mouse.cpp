@@ -95,16 +95,20 @@ int init_ps2_mouse() {
     write_to_mouse(PS2_DEVICE_SET_DEFAULTS);
     ps2_controller_waittoread();  
     byte c = recv_from_mouse();
-    if (c != PS2_ACK)
+    if (c != PS2_ACK) {
+        set_last_error("Error setting default mouse settings");
         return ERROR;
+    }
 
     // Enable keyboard scanning
     ps2_controller_waittowrite();
     write_to_mouse(PS2_DEVICE_ENABLE_SCANNING);
     ps2_controller_waittoread();  
     c = recv_from_mouse();
-    if (c != PS2_ACK)
+    if (c != PS2_ACK) {
+        set_last_error("Error enabling mouse scanning");
         return ERROR;
+    }
 
     const int sample_rate = 200;
     // Enable keyboard scanning
@@ -112,19 +116,22 @@ int init_ps2_mouse() {
     write_to_mouse(PS2_MOUSE_SET_SAMPLE_RATE);
     ps2_controller_waittoread();  
     c = recv_from_mouse();
-    if (c != PS2_ACK)
+    if (c != PS2_ACK) {
+        set_last_error("Error setting mouse sample rate");
         return ERROR;
+    }
     ps2_controller_waittowrite();
     write_to_mouse(sample_rate);
     ps2_controller_waittoread();  
     c = recv_from_mouse();
-    if (c != PS2_ACK)
+    if (c != PS2_ACK) {
+        set_last_error("Error setting mouse sample rate");
         return ERROR;
-
+    }
     
     return SUCCESS;   
 }
-extern int sec;
+
 void restart_ps2_mouse() {
     // Disable keyboard scanning
     ps2_controller_waittowrite();

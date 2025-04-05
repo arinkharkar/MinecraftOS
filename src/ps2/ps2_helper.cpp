@@ -1,4 +1,4 @@
-#include <minecraftOS_types.h>
+#include <minecraftOS.h>
 #include <video.h>
 #include "ps2_helper.h"
 #include <video.h>
@@ -277,17 +277,19 @@ int init_ps2controller() {
     ps2_write_to_firstport(PS2_DEVICE_DISABLE_SCANNING);
     ps2_controller_waittoread();  
     c = ps2_read_from_dataport();
-    print_hex(c);
-    if (c != PS2_ACK)
+    if (c != PS2_ACK) {
+        set_last_error("Error Disabling PS2 Device Scanning");
         return ERROR;
-
+    }
 
     ps2_device_types type1, type2;
-    if (ps2_identify_first_device(&type1) == ERROR)
+    if (ps2_identify_first_device(&type1) == ERROR) {
+        set_last_error("Error identifying first device");
         return ERROR;
-    if (ps2_identify_second_device(&type2) == ERROR)
+    } if (ps2_identify_second_device(&type2) == ERROR) {
+        set_last_error("Error identifying second device");
         return ERROR;
-  
+    }
     // if the first device is a mouse, set the proper write and read functions for the mouse
     if (type1 == PS2_MOUSE || type1 == PS2_5BTN_MOUSE || type1 == PS2_MOUSE_SCROLL_WHL) {
         write_to_mouse = ps2_write_to_firstport;

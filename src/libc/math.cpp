@@ -1,8 +1,9 @@
+#include <minecraftOS.h>
 #include "math.h"
 
 
 // implemented in floatarith.S
-extern "C" float _internalsin(float angle);
+EXTERN_C float _internalsin(float angle);
 
 float sin(float angle) {
     // since sin repeats every 2pi, first bring the value down below / at 2pi

@@ -1,5 +1,9 @@
-#include "ps2keyboard.h"
+#include <time.h>
 #include <draw.h>
+#include <pit.h>
+#include <screensaver.h>
+#include "ps2keyboard.h"
+
 
 // stores the state of each key
 uint8_t keyboard_state[128] = {0};
@@ -9,7 +13,8 @@ int total_keyup_callbacks_in_use = 0;
 void(*keydown_callbacks[128])(key_state_t key);
 void(*keyup_callbacks[128])(key_state_t key);
 
-
+time_t seconds_since_kybd_press = 0;
+bool screensaver_on = false;
 
 
 
@@ -55,6 +60,7 @@ int init_ps2keyboard() {
                 keydown_callbacks[i](k);
         }
     }
+    seconds_since_kybd_press = 0;
 }
 
 
@@ -84,4 +90,19 @@ int get_key_up_evnt(void(*callback)(key_state_t k)) {
     keyup_callbacks[total_keyup_callbacks_in_use] = callback;
     total_keyup_callbacks_in_use++;
     return SUCCESS;
+}
+
+
+void check_for_kybd_inactivity() {
+    seconds_since_kybd_press += seconds_since_kybd_press - seconds_passed;
+
+    if (seconds_since_kybd_press > INACTIVITY_TIME_SECONDS) {
+        // do not start screensaver again
+        if (screensaver_on) return;
+        screensaver_start();
+        screensaver_on = true;
+    } else if (screensaver_on) {
+        screensaver_stop();
+        screensaver_on  = false;
+    }
 }

@@ -14,8 +14,7 @@ void* malloc(size_t c) {
     void* rVal = usedMemory;
     usedMemory += c;
     if (usedMemory >= &heap[HEAP_SIZE]) {
-        print_str("ERROR: OUT OF HEAP SPACE");
-        asm("cli;hlt");
+        PANIC("ERROR: OUT OF HEAP SPACE");
     }
     return rVal;
 }
@@ -26,8 +25,7 @@ void* calloc(size_t number, size_t size) {
     usedMemory += number * size;
 
     if (usedMemory >= &heap[HEAP_SIZE]) {
-        print_str("ERROR: OUT OF HEAP SPACE");
-        asm("cli;hlt");
+        PANIC("ERROR: OUT OF HEAP SPACE");
     }
     return rVal;
 }

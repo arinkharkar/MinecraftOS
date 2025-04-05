@@ -45,12 +45,12 @@ void game_init() {
     swap();
     while (!is_key_down(KEY_SPACE)) {}
     clear_screen();
-    last_ticks = ticks;
+    last_ticks = ticks_passed;
 }
 
 
 void game_loop() {
-    int deltaTime = ticks - last_ticks;
+    int deltaTime = ticks_passed - last_ticks;
     
     // deltaTime is the time per frame, convert this to seconds and invert it for frames per second
     float fps = 1.0 / ((float)deltaTime / 1000.0);
@@ -131,7 +131,7 @@ void game_loop() {
 
     print_float_inplace(fps, 0, 0);
 
-    last_ticks = ticks;
+    last_ticks = ticks_passed;
     
 }
 

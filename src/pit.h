@@ -6,8 +6,8 @@
 
 #define PIT_FREQUENCY 1193180
 
-extern uint32_t ticks;
-
+extern volatile uint32_t ticks_passed;
+extern volatile uint32_t seconds_passed;
 
 void pit_callback();
 void init_pit(int freq);

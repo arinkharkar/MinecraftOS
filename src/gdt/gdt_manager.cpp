@@ -8,7 +8,7 @@ gdt_segment gdt[GDT_ENTRY_COUNT];
 gdt_ptr pgdt;
 
 // assembly function in gdt_enable.S to run the lgdt instruction
-extern "C" void activate_gdt();
+EXTERN_C void activate_gdt();
 
 /*
  The GDT we will be using is extremely simple, our structure is:
@@ -32,7 +32,7 @@ int init_gdt() {
     pgdt.base = (uint32_t)&gdt[0];
     pgdt.limit = sizeof(gdt[0]) * GDT_ENTRY_COUNT - 1;
     activate_gdt();
-    asm volatile("cli");
+    disable_interupts();
     return SUCCESS;
 }
 
@@ -45,7 +45,7 @@ int init_gdt() {
 
 */
 int fill_gdt_segment(gdt_segment* segment, uint32_t base, uint32_t limit, bool onlyKernelMode, bool isDataSegment, bool isReadWriteable) {
-    if (!segment) {
+    if (segment == nullptr) {
         set_last_error("Error Filling GDT: Invalid Pointer to Segment");
         return ERROR;
     }

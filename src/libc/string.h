@@ -46,6 +46,14 @@ static void* memcpy(void* dest, const void* src, size_t n) {
 }
 
 
+static char* strcpy(char* dest, const char* src) {
+    char* original_dest = dest;
+    while ((*dest++ = *src++)) {
+        // copying continues until the null terminator is copied
+    }
+    return original_dest;
+}
+
 static size_t strlen(const char* s) {
     size_t sz = 0;
     while (*s) {

@@ -2,7 +2,14 @@
 #define __STD_LIB_H_
 
 #include <string.h>
+#include <stdint.h>
 #include <math.h>
+
+// the real math.h defines INFINITY as a 64 bit double, VSCode doesnt like this
+#ifdef __VSCODE_
+#undef INFINITY
+#define INFINITY 1
+#endif
 
 static void reverse(char str[], int length) {
     int start = 0;
@@ -132,5 +139,10 @@ static inline float fabs(float num) {
 void* malloc(size_t size);
 
 void* calloc(size_t num, size_t size);
+
+// Defined in random.cpp
+int rand();
+
+void srand(uint32_t seed);
 
 #endif

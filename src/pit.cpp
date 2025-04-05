@@ -1,8 +1,9 @@
 #include "pit.h"
+#include <ps2keyboard.h>
 
-void main_loop();
 
-
+volatile uint32_t ticks_passed = 0;
+volatile uint32_t seconds_passed = 0;
 // 0 = Start at Jan 1 1970 00:00 UTC
 // THIS WILL STOP WORKING ON Tue Jan 19 2038 03:14:07 GMT+0000
 // Getting pretty close to it cant lie :DD
@@ -18,10 +19,19 @@ void init_pit(int freq) {
     outb(0x40, (div >> 8) & 0b11111111);    
 }
 
-uint32_t ticks = 0;
-extern int sec;
+__attribute__((optimize("O0")))
 void pit_callback() {
-    ticks++;
-    if (ticks % 1000 == 0)
-        sec++;
+    ticks_passed++;
+    if (ticks_passed % 1000 == 0) {
+
+        seconds_passed++;
+    }
+}
+
+uint32_t get_seconds_passed() { return seconds_passed; }
+__attribute__((optimize("O0"))) void sleep_seconds(size_t seconds) {
+    // get the seconds since startup from pit.h
+    size_t start_seconds = get_seconds_passed();
+    while (get_seconds_passed() < start_seconds + seconds) {
+    }
 }
