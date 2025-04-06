@@ -140,6 +140,8 @@ void* malloc(size_t size);
 
 void* calloc(size_t num, size_t size);
 
+#define RAND_MAX 32767
+
 // Defined in random.cpp
 int rand();
 

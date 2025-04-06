@@ -8,7 +8,7 @@
 #include "screensavers/screensaver4.h"
 #include "screensavers/screensaver5.h"
 #include "screensavers/screensaver6.h"
-
+#include "screensavers/screensaver7.h"
 
 size_t start_seconds;
 
@@ -24,7 +24,8 @@ const screensaver_data p_screensavers[] = { {SCREENSAVER1_data, SCREENSAVER1_WID
                                             {SCREENSAVER3_data, SCREENSAVER3_WIDTH, SCREENSAVER3_HEIGHT}, 
                                             {SCREENSAVER4_data, SCREENSAVER4_WIDTH, SCREENSAVER4_HEIGHT}, 
                                             {SCREENSAVER5_data, SCREENSAVER5_WIDTH, SCREENSAVER5_HEIGHT}, 
-                                            {SCREENSAVER6_data, SCREENSAVER6_WIDTH, SCREENSAVER6_HEIGHT}
+                                            {SCREENSAVER6_data, SCREENSAVER6_WIDTH, SCREENSAVER6_HEIGHT},
+                                            {SCREENSAVER7_data, SCREENSAVER7_WIDTH, SCREENSAVER7_HEIGHT}
                                         };
 
 constexpr const size_t num_screensavers = sizeof(p_screensavers) / sizeof(p_screensavers[0]);
@@ -33,12 +34,14 @@ bool in_screensaver = false;
 void screensaver_start() {
     in_screensaver = true;
     start_seconds = seconds_passed;
+    srand(rand());
     while (in_screensaver) {
-        for (int i = 0; i < num_screensavers; i++) {
-            draw_image(p_screensavers[i].p_img_data, p_screensavers[i].width, p_screensavers[i].height);
-            swap(); 
-            sleep_seconds(SCREENSAVER_SHOW_TIME_SECONDS);
-        }
+        // generates a random number in [0, num_screensavers + 1]
+        int i = rand() % (num_screensavers + 1);
+        draw_image(p_screensavers[i].p_img_data, p_screensavers[i].width, p_screensavers[i].height);
+        swap(); 
+        sleep_seconds(SCREENSAVER_SHOW_TIME_SECONDS);
+        
     }
 
 }

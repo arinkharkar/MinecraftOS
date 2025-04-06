@@ -16,7 +16,7 @@ multiboot:
 .long 0,0,0,0,0
 .long 0
 /* Width, Height, Pixel Depth (32 bit is true color) */
-.long 680, 480, 24
+.long 1024, 768, 32
 
 /*
  * Create a 64 Kb stack, will later move %esp to stack top
