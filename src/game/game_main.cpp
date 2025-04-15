@@ -26,6 +26,24 @@ void game_init() {
 
 
 void game_loop() {
+    float fTheta = float(ticks_passed) / 1000.0f;
+    // calculate the rotation matrix
+    rot_matrix_z[0] = cos(fTheta);
+    rot_matrix_z[1] = sin(fTheta);
+    rot_matrix_z[4] = -sin(fTheta);
+    rot_matrix_z[5] = cos(fTheta);
+    rot_matrix_z[10] = 1;
+    rot_matrix_z[15] = 1;
+
+    // Rotation X
+    rot_matrix_x[0] = 1;
+    rot_matrix_x[5] = cos(fTheta * 0.5f);
+    rot_matrix_x[6] = sin(fTheta * 0.5f);
+    rot_matrix_x[9] = -sin(fTheta * 0.5f);
+    rot_matrix_x[10] = cos(fTheta * 0.5f);
+    rot_matrix_x[15] = 1;
+
+
     int deltaTime = ticks_passed - last_ticks;
     
     // deltaTime is the time per frame, convert this to seconds and invert it for frames per second

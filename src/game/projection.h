@@ -24,5 +24,8 @@ constexpr matrix_m4s projection_matrix = {
     0, 0, (-1 * far_plane * near_plane) / (far_plane - near_plane), 0
 };
 
+matrix_m4s rot_matrix_z = {0};
+
+matrix_m4s rot_matrix_x = {0};
 
 #endif
