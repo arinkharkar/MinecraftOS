@@ -34,6 +34,9 @@ void multiply_m4s(const matrix_f m1, const matrix_f m2, matrix_f dest);
 // multiply a 4x4 matrix m1 by a 4x1 vector m2 into dest
 void multiply_m4sv(const matrix_f m1, const vector4 m2, vector4 dest);
 
+// multiply a vector3 by a matrix 4x4 into dest (a vector3), assume the 4th component of the vector is 1, and divide the vector3 by w
+void multiply_v3m4(const matrix_f m, const vector3 v, vector3 dest);
+
 // print the matrix
 void print_m4s(const matrix_f matrix);
 

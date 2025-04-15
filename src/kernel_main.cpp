@@ -69,7 +69,6 @@ EXTERN_C NORETURN void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     game_init();
 
     while (1) {
-        clear_screen();
         game_loop();
         draw_cursor();
         check_for_kybd_inactivity();

@@ -5,12 +5,31 @@ void game_init();
 
 void game_loop();
 
-enum line_direction { xDir, yDir, zDir };
+// the number of triangles in a cube
+#define CUBE_NUM_TRIS 12
+float cube_triangle_verticies[CUBE_NUM_TRIS][3][3] = {
+    { {0.0f, 0.0f, 0.0f},    {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 0.0f} },
+	{ {0.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 0.0f},    {1.0f, 0.0f, 0.0f} },
 
-void draw_line_f(float x1, float y1, float z1, float len , int dir) ;
+		// EAST                                                      
+	{ {1.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 1.0f} },
+	{ {1.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 1.0f},    {1.0f, 0.0f, 1.0f} },
 
-void draw_hollow_square(float x1, float y1, float z1, float x2, float y2, float z2);
+	// NORTH                                                     
+	{ {1.0f, 0.0f, 1.0f},    {1.0f, 1.0f, 1.0f},    {0.0f, 1.0f, 1.0f} },
+	{ {1.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 1.0f},    {0.0f, 0.0f, 1.0f} },
 
-void draw_cube(float x1, float y1, float z1, float len);
+	// WEST                                                      
+	{ {0.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 1.0f},    {0.0f, 1.0f, 0.0f} },
+	{ {0.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 0.0f},    {0.0f, 0.0f, 0.0f} },
+
+	// TOP                                                       
+	{ {0.0f, 1.0f, 0.0f},    {0.0f, 1.0f, 1.0f},    {1.0f, 1.0f, 1.0f} },
+	{ {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 1.0f},    {1.0f, 1.0f, 0.0f} },
+
+	// BOTTOM                                                    
+	{ {1.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 0.0f} },
+	{ {1.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 0.0f},    {1.0f, 0.0f, 0.0f} }
+};
 
 #endif 

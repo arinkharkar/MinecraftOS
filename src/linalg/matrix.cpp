@@ -33,6 +33,18 @@ void multiply_m4sv (const matrix_f m1, const vector4 m2, vector4 dest)
 };
 
 
+
+
+void multiply_v3m4(const matrix_f m, const vector3 v, vector3 dest) {
+    dest[0] = v[0] * m[0]  + v[1] * m[4]  + v[2] * m[8]  + 1 * m[12];
+    dest[1] = v[0] * m[1]  + v[1] * m[5]  + v[2] * m[9]  + 1 * m[13];
+    dest[2] = v[0] * m[2]  + v[1] * m[6]  + v[2] * m[10] + 1 * m[14];
+    float w = v[0] * m[3]  + v[1] * m[7]  + v[2] * m[11] + 1 * m[15];
+    if (w == 0) return;
+    dest[0] /= w; dest[1] /= w; dest[2] /= w;
+}
+
+
 void print_m4s(const matrix_f m) {
     print_ch('\n');
     for (int i = 0; i < 4; i++) {
