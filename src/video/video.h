@@ -72,6 +72,8 @@ int print_int_inplace(const int num, const int x, const int y);
 int print_str_inplace(const char* str, const int x, const int y);
 //prints a bool at a location to screen
 int print_bool_inplace(const bool b, const int x, const int y);
+// prints a new line
+int print_ln();
 
 // fill the screen with the specified color
 void fill_screen(color col);

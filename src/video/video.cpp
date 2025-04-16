@@ -171,6 +171,12 @@ int print_bool_inplace(bool b, int x, int y) {
     return rVal;
 }
 
+int print_ln() {
+    current_cursor_pos.y += (CHAR_HEIGHT + 1);
+    current_cursor_pos.x = 0;
+    return SUCCESS;
+}
+
 
 int draw_char(char c) {
     // all the valid ascii font values

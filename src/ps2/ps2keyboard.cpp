@@ -94,6 +94,7 @@ int get_key_up_evnt(void(*callback)(key_state_t k)) {
 
 
 void check_for_kybd_inactivity() {
+    return;
     seconds_since_kybd_press += seconds_since_kybd_press - seconds_passed;
 
     if (seconds_since_kybd_press > INACTIVITY_TIME_SECONDS) {

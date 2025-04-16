@@ -3,6 +3,9 @@
 
 #include <matrix.h>
 #include <math.h>
+/*
+ * https://github.com/OneLoneCoder/Javidx9/tree/master/ConsoleGameEngine/BiggerProjects/Engine3D credit to Javidx9 for helping with the projection code, really helped me out
+*/
 
 // To speed up the calculations, assume we know the screen width/height at compile-time
 constexpr int expected_screen_width = 640;
@@ -24,8 +27,8 @@ constexpr matrix_m4s projection_matrix = {
     0, 0, (-1 * far_plane * near_plane) / (far_plane - near_plane), 0
 };
 
-matrix_m4s rot_matrix_z = {0};
+static matrix_m4s rot_matrix_z = {0};
 
-matrix_m4s rot_matrix_x = {0};
+static matrix_m4s rot_matrix_x = {0};
 
 #endif

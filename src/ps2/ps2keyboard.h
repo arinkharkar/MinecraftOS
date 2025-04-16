@@ -72,8 +72,8 @@
 #define RCTRL_PRESSED 1 << 5
 #define KEY_IS_UP 0
 
-// 10 min
-#define INACTIVITY_TIME_SECONDS (2)
+// 60 min
+#define INACTIVITY_TIME_SECONDS (60*60)
 
 typedef uint8_t key_state_t;
 

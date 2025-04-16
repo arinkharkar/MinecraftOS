@@ -9,7 +9,8 @@
 #define INFINITY (1.0/0.0)
 
 
-#define M_PI ((float)3.1415926535)
+#define M_PI  ((float)3.1415926535)
+#define M_TAU ((float)6.2831853072)
 #define PI ((float)3.1415926535)
 
 #define EulersNumber ((float)2.7182818)
@@ -30,6 +31,11 @@ float sin(float angle);
 float cos(float angle);
 
 float tan(float angle);
+
+// uses sin_table.cpp's lookup value to quickly 
+float sin_fast(float angle);
+
+float cos_fast(float angle);
 
 static inline bool isnan(float n) { if (n != n) return true; return false; }
 

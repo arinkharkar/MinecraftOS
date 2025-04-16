@@ -7,7 +7,7 @@ void game_loop();
 
 // the number of triangles in a cube
 #define CUBE_NUM_TRIS 12
-float cube_triangle_verticies[CUBE_NUM_TRIS][3][3] = {
+static float cube_triangle_verticies[CUBE_NUM_TRIS][3][3] = {
     { {0.0f, 0.0f, 0.0f},    {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 0.0f} },
 	{ {0.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 0.0f},    {1.0f, 0.0f, 0.0f} },
 

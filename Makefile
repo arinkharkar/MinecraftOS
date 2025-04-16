@@ -42,7 +42,9 @@ $(BOOT): $(ISO)/boot/minecraftOS.bin
 	$(GRUB) --xorriso=$(XORRISO) -o $@ $(ISO)
 	cp minecraftOS.iso /mnt/c/users/arin/documents
 
-clean:
-	rm -rf $(BIN) $(BOOT) $(ISO)/boot/minecraftOS.bin
+# Used to clean everything except screensaver .cpp files
+clean_fast:
+	find $(BIN) -type f -name '*.o' ! -path '$(BIN)/video/screensavers/*' -exec rm {} +
+
 
 .PHONY: all clean
