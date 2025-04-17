@@ -15,7 +15,6 @@
 #include "ps2mouse.h"
 #include "fpu.h"
 
-
 void game_loop();
 
 /*
