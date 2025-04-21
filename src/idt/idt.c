@@ -17,7 +17,7 @@ static char* float_to_str(float num, char* str, int precision);
 
 extern void* isr_table[]; 
 
-idt_ptr pidt;
+EXTERN_C idt_ptr pidt;
 
 /*
  Initializes the Interupt Descriptor Table, a table of pointers so that the CPU knows where to go when an interupt is called

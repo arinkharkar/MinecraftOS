@@ -26,7 +26,7 @@ void game_init() {
 
 
 void game_loop() {
-    float fTheta = float(ticks_passed) / 1000.0f;
+    float fTheta = (float)(ticks_passed) / 1000.0f;
     // calculate the rotation matrix
     rot_matrix_z[0] = cos(fTheta);
     rot_matrix_z[1] = sin(fTheta);

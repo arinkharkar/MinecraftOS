@@ -33,9 +33,9 @@ extern int GRUB_MAGIC_NUMBER;
 
 // wrapping a few assembly functions into C functions, to not mess up intelisense add the __VSCODE_ check
 #ifndef __VSCODE_
-inline void disable_interupts() { asm volatile("cli"); }
-inline void enable_interupts() { asm volatile("sti"); }
-inline void halt_cpu() { asm volatile("hlt"); }
+static inline void disable_interupts() { asm volatile("cli"); }
+static inline void enable_interupts() { asm volatile("sti"); }
+static inline void halt_cpu() { asm volatile("hlt"); }
 #else
 inline void disable_interupts() { asm("cli"); }
 inline void enable_interupts() { asm("sti"); }
@@ -46,7 +46,7 @@ inline void halt_cpu() { asm("hlt"); }
 #ifndef __cplusplus
     #define nullptr ((void*)0)
 
-    // we are including
+    // we are including stdbool, so this shouldnt be a problem
     #ifndef true
         #define true 1
     #endif
@@ -57,7 +57,7 @@ inline void halt_cpu() { asm("hlt"); }
 
 #endif
 
-// This just defines NORETURN so that it is standard between C and C++
+// This just defines NORETURN so that it is standard between C and C++ and across compilers
 #ifdef __cplusplus
     #define NORETURN [[noreturn]]
 #else

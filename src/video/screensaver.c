@@ -28,7 +28,7 @@ const screensaver_data p_screensavers[] = { {SCREENSAVER1_data, SCREENSAVER1_WID
                                             {SCREENSAVER7_data, SCREENSAVER7_WIDTH, SCREENSAVER7_HEIGHT}
                                         };
 
-constexpr const size_t num_screensavers = sizeof(p_screensavers) / sizeof(p_screensavers[0]);
+const size_t num_screensavers = sizeof(p_screensavers) / sizeof(p_screensavers[0]);
 
 bool in_screensaver = false;
 void screensaver_start() {
@@ -38,7 +38,7 @@ void screensaver_start() {
     while (in_screensaver) {
         // generates a random number in [0, num_screensavers + 1]
         int i = rand() % (num_screensavers + 1);
-        draw_image(p_screensavers[i].p_img_data, p_screensavers[i].width, p_screensavers[i].height);
+        draw_image(p_screensavers[i].p_img_data, p_screensavers[i].width, p_screensavers[i].height, 0, 0);
         swap(); 
         sleep_seconds(SCREENSAVER_SHOW_TIME_SECONDS);
         

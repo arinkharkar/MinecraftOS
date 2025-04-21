@@ -61,7 +61,9 @@ EXTERN_C NORETURN void kernel_main(multiboot_info_t* mbd, unsigned int magic) {
     print_str("\n");
 
     srand(ticks_passed);
-
+    print_hex(mbd->mem_lower);
+    print_ln();
+    print_hex(mbd->mem_upper);
     swap();
 
     game_init();

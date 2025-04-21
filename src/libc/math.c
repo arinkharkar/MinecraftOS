@@ -39,16 +39,16 @@ float sin_fast(float angle) {
     
     // if the angle is already in the [0, tau/4] range, just return the value
     if (angle < M_TAU / 4)
-        return sin_lookup_table[int(float(2*SIN_TABLE_VALUE_COUNT) / M_PI * angle)];
+        return sin_lookup_table[(int)((float)(2*SIN_TABLE_VALUE_COUNT) / M_PI * angle)];
 
     // if the angle is between [tau/4,tau/2], invert the angle by subtracting from the final value
     if (angle < M_TAU / 2)
-        return sin_lookup_table[SIN_TABLE_VALUE_COUNT - int(float(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - M_TAU / 4))];
+        return sin_lookup_table[SIN_TABLE_VALUE_COUNT - (int)((float)(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - M_TAU / 4))];
     // if the angle is between [tau/2, 3tau/4] return the negative of [0, tau/4]
     if (angle < M_TAU * 0.75)
-        return -sin_lookup_table[int(float(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - M_PI))];
+        return -sin_lookup_table[(int)((float)(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - M_PI))];
         
-    return -sin_lookup_table[SIN_TABLE_VALUE_COUNT - int(float(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - 3 * M_PI / 2))];
+    return -sin_lookup_table[SIN_TABLE_VALUE_COUNT - (int)((float)(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - 3 * M_PI / 2))];
 }
 
 float cos_fast(float angle) {
@@ -62,14 +62,14 @@ float cos_fast(float angle) {
     
     // if the angle is already in the [0, tau/4] range, just return the value
     if (angle < M_TAU / 4)
-        return cos_lookup_table[int(float(2*COS_TABLE_VALUE_COUNT) / M_PI * angle)];
+        return cos_lookup_table[(int)((float)(2*COS_TABLE_VALUE_COUNT) / M_PI * angle)];
 
     // if the angle is between [tau/4,tau/2], invert the angle by subtracting from the final value
     if (angle < M_TAU / 2)
-        return -cos_lookup_table[COS_TABLE_VALUE_COUNT - int(float(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - M_TAU / 4))];
+        return -cos_lookup_table[COS_TABLE_VALUE_COUNT - (int)((float)(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - M_TAU / 4))];
     // if the angle is between [tau/2, 3tau/4] return the negative of [0, tau/4]
     if (angle < M_TAU * 0.75)
-        return -cos_lookup_table[int(float(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - M_PI))];
+        return -cos_lookup_table[(int)((float)(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - M_PI))];
         
-    return cos_lookup_table[COS_TABLE_VALUE_COUNT - int(float(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - 3 * M_PI / 2))];
+    return cos_lookup_table[COS_TABLE_VALUE_COUNT - (int)((float)(2*COS_TABLE_VALUE_COUNT) / M_PI * (angle - 3 * M_PI / 2))];
 }

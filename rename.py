@@ -3,7 +3,7 @@ import os
 def rename_files(root_dir):
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
-            if filename.endswith(".c.c"):
+            if filename.endswith(".cpp"):
                 old_path = os.path.join(dirpath, filename)
                 new_filename = filename[:-2]  # Remove the last ".c"
                 new_path = os.path.join(dirpath, new_filename)

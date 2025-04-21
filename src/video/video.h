@@ -90,7 +90,15 @@ static inline void swap() {
 }
 
 // draws an image given by an array from https://notisrac.github.io/FileToCArray/ WARNING: no bounds checks are done, the p_img_data must contain correct data
+#ifdef __cplusplus
 void draw_image(const uint32_t* p_img_data, const uint32_t width, const uint32_t height, const uint32_t startX = 0, const uint32_t startY = 0);
+#else 
+void draw_image(const uint32_t* p_img_data, const uint32_t width, const uint32_t height, const uint32_t startX, const uint32_t startY);
+#endif
 
+#ifdef __cplusplus
 static inline constexpr color rgb(uint32_t r, uint32_t g, uint32_t b) {return ((r << 16) | (g << 8) | (b));};
+#else
+#define rgb(r, g, b) (((r) << 16) | ((g) << 8) | (b))
+#endif
 #endif
