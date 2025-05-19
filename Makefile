@@ -1,9 +1,10 @@
-CC=/usr/local/opt/cross/bin/i686-elf-gcc
+CC=gcc
 CXX=/usr/local/opt/cross/bin/i686-elf-g++
-ASM=/usr/local/opt/cross/bin/i686-elf-as
-LD=/usr/local/opt/cross/bin/i686-elf-gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
+ASM=as
+LD=gcc #Want to use the gcc for linking rather than ld, as ld may cause problems
 GRUB=grub-mkrescue
 CFLAGS= -ffreestanding -m32 -fno-pie -fno-builtin -mno-red-zone -fno-exceptions -I src -I src/video -I src/linalg -I src/video/character_data -I src/gdt -I src/libc -I src/idt -I src/ps2 -I src/game
+ASMFLAGS= -m32 -ffreestanding
 XORRISO=/src/xorriso-1.5.6/xorriso/xorriso
 LDFLAGS=-T"link.ld" -ffreestanding -nostdlib -lgcc
 BIN=bin
@@ -28,7 +29,7 @@ $(BIN)/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN)/%.o: src/%.S
-	$(ASM) $< -o $@
+	$(ASM) $(ASMFLAGS) $< -o $@
 
 # Link the kernel
 $(BIN)/minecraftOS.bin: $(OBJ_FILES)
