@@ -12,18 +12,18 @@ typedef uint8_t BYTE;
 #endif
 
 
-#define BITS_PER_BYTE     8
-#define BITS_PER_SHORT    16
-#define BITS_PER_INT      32
+constexpr uint32_t BITS_PER_BYTE  = 8;
+constexpr uint32_t BITS_PER_SHORT = 16;
+constexpr uint32_t BITS_PER_INT   = 32;
 
 // When returning an int from a function, use these
-#define ERROR   0
-#define SUCCESS 1
+constexpr int ERROR   = 0;
+constexpr int SUCCESS = 1;
 
 typedef struct {
     int x;
     int y;
-} position_t;
+} position;
 
 // Suspend execution for a certian amount of seconds
 void sleep_seconds(size_t seconds);
@@ -32,15 +32,10 @@ void sleep_seconds(size_t seconds);
 extern int GRUB_MAGIC_NUMBER;
 
 // wrapping a few assembly functions into C functions, to not mess up intelisense add the __VSCODE_ check
-#ifndef __VSCODE_
 static inline void disable_interupts() { asm volatile("cli"); }
 static inline void enable_interupts() { asm volatile("sti"); }
 static inline void halt_cpu() { asm volatile("hlt"); }
-#else
-inline void disable_interupts() { asm("cli"); }
-inline void enable_interupts() { asm("sti"); }
-inline void halt_cpu() { asm("hlt"); }
-#endif
+
 
 
 #ifndef __cplusplus

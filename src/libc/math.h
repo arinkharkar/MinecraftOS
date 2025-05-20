@@ -2,18 +2,18 @@
 #define __MATH_H_
 
 #include <stdbool.h>
+#include <float.h>
 
-#ifdef INFINITY 
+
 #undef INFINITY
-#endif
 #define INFINITY (1.0/0.0)
 
 
-#define M_PI  ((float)3.1415926535)
-#define M_TAU ((float)6.2831853072)
-#define PI ((float)3.1415926535)
+constexpr float M_PI = 3.1415926535f;
+constexpr float M_TAU = 6.2831853072f;
+constexpr float PI = 3.1415926535f;
 
-#define EulersNumber ((float)2.7182818)
+constexpr float EULERS_NUMBER = 2.7182818f;
 
 float pow(float base, float exp);
 
@@ -33,14 +33,14 @@ float cos(float angle);
 float tan(float angle);
 
 // uses sin_table.cpp's lookup value to quickly 
-float sin_fast(float angle);
+constexpr float sin_fast(float angle);
 
-float cos_fast(float angle);
+constexpr float cos_fast(float angle);
 
-static inline bool isnan(float n) { if (n != n) return true; return false; }
+constexpr static inline bool isnan(float n) { if (n != n) return true; return false; }
 
 static inline float log(float val, float base) { return logbase2x(val) / logbase2x(base); }
 
-static inline float sqrt(float x) { return pow(x, 0.5); }
+constexpr static inline float sqrt(float x) { return pow(x, 0.5); }
 
 #endif

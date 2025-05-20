@@ -4,7 +4,7 @@
 #include "video.h"
 #include <io.h>
 
-#define PIT_FREQUENCY 1193180
+const uint32_t PIT_FREQUENCY = 1193180;
 
 extern volatile uint32_t ticks_passed;
 extern volatile uint32_t seconds_passed;

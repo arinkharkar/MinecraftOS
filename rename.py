@@ -1,19 +1,13 @@
 import os
 
-def rename_files(root_dir):
-    for dirpath, _, filenames in os.walk(root_dir):
-        for filename in filenames:
-            if filename.endswith(".cpp"):
-                old_path = os.path.join(dirpath, filename)
-                new_filename = filename[:-2]  # Remove the last ".c"
-                new_path = os.path.join(dirpath, new_filename)
-                
-                try:
-                    os.rename(old_path, new_path)
-                    print(f"Renamed: {old_path} -> {new_path}")
-                except Exception as e:
-                    print(f"Error renaming {old_path}: {e}")
+def rename_c_to_cpp(directory):
+    for root, dirs, files in os.walk(directory):
+        for filename in files:
+            if filename.endswith('.c'):
+                old_path = os.path.join(root, filename)
+                new_path = os.path.join(root, filename[:-2] + '.cpp')
+                os.rename(old_path, new_path)
+                print(f"Renamed: {old_path} -> {new_path}")
 
-if __name__ == "__main__":
-    current_directory = os.getcwd()
-    rename_files(current_directory)
+# Call the function on the 'src' directory
+rename_c_to_cpp('src')

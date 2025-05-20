@@ -3,9 +3,7 @@
 #include "video.h"
 #include <string.h>
 
-#ifndef HEAP_SIZE
-#define HEAP_SIZE (1048576*5)
-#endif
+constexpr uint32_t HEAP_SIZE = 1048576*5;
 
 char heap[HEAP_SIZE] = {0};
 char* usedMemory = heap;
@@ -29,6 +27,9 @@ void* calloc(size_t number, size_t size) {
     }
     return rVal;
 }
+
+
+void free(void* ptr) {}
 
 #ifdef __cplusplus
 

@@ -6,12 +6,8 @@
 #include <math.h>
 
 // the real math.h defines INFINITY as a 64 bit double, VSCode doesnt like this
-#ifdef __VSCODE_
-#undef INFINITY
-#define INFINITY 1
-#endif
 
-static void reverse(char str[], int length) {
+static void reverse(char* str, int length) {
     int start = 0;
     int end = length - 1;
     while (start < end) {

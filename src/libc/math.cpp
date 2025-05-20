@@ -12,11 +12,13 @@ float sin(float angle) {
     // since sin repeats every 2pi, first bring the value down below / at 2pi
     while (angle >= 2*PI)
         angle -= 2*PI;
+    // the sin function in x87 instruction set
     return _internalsin(angle);
 
 }
 
 float cos(float angle) {
+// the cos function in x87 instruction set
     return sin(angle + PI/2);
 }
 
@@ -28,7 +30,7 @@ int print_int(const int str);
 int print_str(const char* str);
 
 
-float sin_fast(float angle) {
+constexpr float sin_fast(float angle) {
     // first, since sin(x) repeats every tau, make sure angle is in the domain [0,tau]
     while (angle > M_TAU)
         angle -= M_TAU;
@@ -51,7 +53,7 @@ float sin_fast(float angle) {
     return -sin_lookup_table[SIN_TABLE_VALUE_COUNT - (int)((float)(2*SIN_TABLE_VALUE_COUNT) / M_PI * (angle - 3 * M_PI / 2))];
 }
 
-float cos_fast(float angle) {
+constexpr float cos_fast(float angle) {
     // first, since cos(x) repeats every tau, make sure angle is in the domain [0,tau]
     while (angle > M_TAU)
         angle -= M_TAU;

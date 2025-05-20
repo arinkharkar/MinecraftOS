@@ -19,13 +19,13 @@ typedef struct {
     byte y_movement;
 } mouse_data_t;
 
-#define PS2_BUTTON_LEFT_FLAG    1<<0
-#define PS2_BUTTON_RIGHT_FLAG   1<<1
-#define PS2_BUTTON_MIDDLE_FLAG  1<<2
-#define PS2_ALWAYS_ONE_FLAG     1<<3
-#define PS2_X_SIGN_BIT          1<<4
-#define PS2_Y_SIGN_BIT          1<<5
-#define PS2_X_OVERFLOW_BIT      1<<6
-#define PS2_Y_OVERFLOW_BIT      1<<7
+constexpr int PS2_BUTTON_LEFT_FLAG   = 1 << 0;
+constexpr int PS2_BUTTON_RIGHT_FLAG  = 1 << 1;
+constexpr int PS2_BUTTON_MIDDLE_FLAG = 1 << 2;
+constexpr int PS2_ALWAYS_ONE_FLAG    = 1 << 3;
+constexpr int PS2_X_SIGN_BIT         = 1 << 4;
+constexpr int PS2_Y_SIGN_BIT         = 1 << 5;
+constexpr int PS2_X_OVERFLOW_BIT     = 1 << 6;
+constexpr int PS2_Y_OVERFLOW_BIT     = 1 << 7;
 
 #endif
